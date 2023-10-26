@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-// import hashEncrption from '@prajeshkotian/cryptoproject'
+
 
 import { validateEmail } from '../UtilityFunctions'
+import { getHash } from '../CryptoUtility'
 
 import { Button, Input, message } from 'antd'
 import {EyeTwoTone, EyeInvisibleOutlined} from '@ant-design/icons'
@@ -26,8 +27,8 @@ function Registration(props) {
             message.warning('Enter a valid Email')
             return
         }
-        // const hashedPassword = hashEncrption(password)
-        // console.log(hashedPassword)
+        const hashedPassword = getHash(password)
+        console.log(hashedPassword)
     }
 
   return (
