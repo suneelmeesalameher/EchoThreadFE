@@ -1,0 +1,58 @@
+.login{
+    height: 400px;
+    .page-header{
+        height: 200px;
+    }
+    .create-user{
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        justify-content: center;
+        /*align-items: center;*/
+        .email{
+            display: flex;
+            >label{
+                width: 50%;
+                justify-content: right;
+            }
+            .ant-input{
+                margin-left: 20px;
+                width: 400px;
+            }
+            padding-bottom: 20px;
+        }
+        .password{
+            display: flex;
+            >label{
+                width: 50%;
+            }
+            >span{
+                width: 360px;
+                .ant-input{
+                    width: 400px;
+                }
+            }
+            padding-bottom: 20px;
+        }
+        .login-button{
+            align-self:self-end;
+            width: 200px;
+            margin-right: 50px;
+            .ant-btn{
+                align-items: center;
+                width: 50%;
+                background-color: #9090;
+            }
+            .ant-btn:disabled{
+                background-color: #ffff;
+            }
+        }
+        >a{
+            color: #ffff
+        }:hover{
+            cursor: pointer;
+        }
+        
+    }
+}
