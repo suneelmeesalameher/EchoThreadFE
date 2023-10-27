@@ -55,10 +55,5 @@
   "browser": {
     "crypto": false,
     "buffer": false
-  },
-  "build": {
-      "options": {
-        "webpackConfig": "<app-root>/webpack.config.js"
-      }
   }
 }
