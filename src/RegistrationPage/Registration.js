@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
-// import hashEncrption from '@prajeshkotian/cryptoproject'
+
 
 import { validateEmail } from '../UtilityFunctions'
 import { server_url } from '../config'
+import { getHash } from '../CryptoUtility'
 
 import { Button, Input, message } from 'antd'
 import {EyeTwoTone, EyeInvisibleOutlined} from '@ant-design/icons'
@@ -37,14 +38,14 @@ function Registration(props) {
             message.warning('Enter a valid Email')
             return
         }
-        // const hashedPassword = hashEncrption(password)
-        // console.log(hashedPassword)
+        const hashedPassword = getHash(password)
+        console.log(hashedPassword)
         //process.env.REACT_APP_SERVER_URL
         setLoading(true)
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ emailId: emailId, password: password})
+            body: JSON.stringify({ emailId: emailId, password: hashedPassword})
         };
         fetch(server_url, requestOptions).then((res)=>{
             if(res && res.ok )
@@ -61,6 +62,7 @@ function Registration(props) {
             message.error(err)
             setLoading(false)
         })
+        
     }
 
   return (
