@@ -10,7 +10,7 @@ function MessageList(props) {
           position:"left",
           type:"text",
           name:"Kursat",
-          text:"Give me a message list example !",
+          text:"Give me a message list example ! I need to get this done quick",
           id: 1
         },
         {
@@ -22,13 +22,14 @@ function MessageList(props) {
         },
         ]
         const messages = (dataSource || []).map(message=>{
-           return <MessageBox 
+           return (<MessageBox 
                 position={message.name == 'Emre' ? 'left' : 'right'}
                 type={message.type}
+                title={message.name}
                 text={message.text}
                 date={new Date()}
                 key={message.id}
-            />
+            />)
           })
   return (
     <div className='message-list'>

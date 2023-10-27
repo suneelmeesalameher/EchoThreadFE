@@ -24,7 +24,7 @@
                         height: 25px;
                     }
                     >svg:hover{
-                        fill: #779191;
+                        fill: #6AA602;
                         transform: scale(1.2);
                     }
                 }
@@ -45,6 +45,8 @@
                     .image-container{
                         width: 20%;
                         align-self: center;
+                        background-color: #282c34;
+                        margin-left: 10px;
                     }
                     .data-container{
                         width: 80%;
@@ -61,13 +63,14 @@
                 transition: background-color 500ms linear;
             }
             .contact-card:hover{
-                background-color: #779191;
+                background-color: #6AA602;
                 color: black;
             }
         }
     }
     .ant-row{
         flex-direction: row;
+        flex-wrap: nowrap;
         .chat-window{
             width: 100%;
             min-height: 700px;
@@ -76,6 +79,41 @@
             }
             .message-window{
                 height: 570px;
+                .message-list{
+                    max-height:570px;
+                    .rce-container-mbox{
+                        .rce-mbox{
+                            .rce-mbox-body{
+                                .rce-mbox-title{
+                                    color: #6AA602;
+                                }
+                                .rce-mbox-text{
+                                    color: #282c34;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .message-input-container{
+                width: 800px;
+                .message-box{
+                    width: 100%;
+                    .ant-input-affix-wrapper{
+                        margin-left: 50px;
+                        .ant-input-suffix{
+                            width: 30px;
+                            >span{
+                                width: 25px;
+                                height: 25px;
+                            }
+                            >span:hover{
+                                fill: #6AA602;
+                                transform: scale(1.2);
+                            }
+                        }
+                    }
+                }
             }
         }
     }

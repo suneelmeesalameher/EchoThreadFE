@@ -11,10 +11,10 @@ function HomePage(props) {
   return (
     <div className='home-page'>
       <Row>
-        <Col xs={2} sm={3} md={4} lg={5} xl={6}>
+        <Col xs={4} sm={4} md={4} lg={5} xl={6}>
           <LeftSideBar />
         </Col>
-        <Col xs={6} sm={8} md={12} lg={14} xl={16}>
+        <Col xs={6} sm={8} md={12} lg={15} xl={18}>
           <ChatWindow />
         </Col>
       </Row>

@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import MessageList from '../Components/MessageList'
+import MessageInput from '../Components/MessageInput'
 
 function ChatWindow(props) {
   return (
@@ -11,6 +12,9 @@ function ChatWindow(props) {
       </div>
       <div className='message-window'>
         <MessageList />
+      </div>
+      <div className='message-input-container'>
+        <MessageInput />
       </div>
     </div>
   )
