@@ -1,0 +1,82 @@
+.home-page{
+    width: 100vw;
+    height: 100vh;
+    .left-side-bar{
+        height: 99.6vh;
+        border: 1px solid #4f5454;
+        .top-bar{
+            display: flex;
+            flex-direction: column;
+            height: 150px;
+            border-bottom: 1px solid #4f5454;
+            .section1{
+                height: 50%;
+                display: flex;
+                justify-content: space-between;
+                padding: 20px;
+                >h3:hover{
+                    fill: #779191;
+                    /*transform: scale(1.2);*/
+                }
+                .anticon-message{
+                    >svg{
+                        width: 25px;
+                        height: 25px;
+                    }
+                    >svg:hover{
+                        fill: #779191;
+                        transform: scale(1.2);
+                    }
+                }
+            }
+            .section2{
+                height: 50%;
+            }
+        }
+        .list-contacts{
+            .contact-card{
+                border-bottom: 1px solid #4f5454;
+                height: 60px;
+                width: 100%;
+                .profile-container{
+                    display: flex;
+                    flex-direction: row;
+                    height: 100%;
+                    .image-container{
+                        width: 20%;
+                        align-self: center;
+                    }
+                    .data-container{
+                        width: 80%;
+                        padding: 5px;
+                        >span{
+                            display: flex;
+                            flex-direction: column;
+                        }
+                    }
+                }
+                
+                /*-webkit-transition: background-color 1000ms linear;*/
+                -ms-transition: background-color 500ms linear;
+                transition: background-color 500ms linear;
+            }
+            .contact-card:hover{
+                background-color: #779191;
+                color: black;
+            }
+        }
+    }
+    .ant-row{
+        flex-direction: row;
+        .chat-window{
+            width: 100%;
+            min-height: 700px;
+            .chat-top-bar{
+                height: 100px;
+            }
+            .message-window{
+                height: 570px;
+            }
+        }
+    }
+}
