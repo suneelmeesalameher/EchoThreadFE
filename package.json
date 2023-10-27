@@ -58,7 +58,7 @@
   },
   "build": {
       "options": {
-        "webpackConfig": "<app-root>/webpack.config.js"
+        "webpackConfig": "<app-root>/node_modules/react-scripts/config/webpack.config.js"
       }
   }
 }
