@@ -28,6 +28,22 @@ function Registration(props) {
         }
         // const hashedPassword = hashEncrption(password)
         // console.log(hashedPassword)
+        //process.env.REACT_APP_SERVER_URL
+        
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ emailId: emailId, password: password})
+        };
+        fetch('https://echothread.onrender.com/user', requestOptions).then((res)=>{
+            if(res && res.ok )
+                return res.json()
+            throw res
+        }).then(data=>{
+            console.log(data)
+        }).catch(err=>{
+            console.log(err)
+        })
     }
 
   return (

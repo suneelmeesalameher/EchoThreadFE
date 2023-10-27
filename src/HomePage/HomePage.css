@@ -51,6 +51,7 @@
                     .data-container{
                         width: 80%;
                         padding: 5px;
+                        align-self: center;
                         >span{
                             display: flex;
                             flex-direction: column;
@@ -75,10 +76,24 @@
             width: 100%;
             min-height: 700px;
             .chat-top-bar{
-                height: 100px;
+                height: 80px;
+                .message-top-bar{
+                    height: 100%;
+                    border: 1px solid #4f5454;
+                    .top-bar-container{
+                        padding: 25px;
+                        display: flex;
+                        justify-content: flex-start;
+                        .user-name{
+                            margin-left: 20px;
+                            align-self: center;
+                        }
+                    }
+                }
             }
             .message-window{
                 height: 570px;
+                border: 1px solid #4f5454;
                 .message-list{
                     max-height:570px;
                     .rce-container-mbox{
@@ -97,6 +112,7 @@
             }
             .message-input-container{
                 width: 800px;
+                padding: 10px;
                 .message-box{
                     width: 100%;
                     .ant-input-affix-wrapper{
