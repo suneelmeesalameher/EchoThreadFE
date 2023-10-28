@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { MessageBox } from 'react-chat-elements'
 import "react-chat-elements/dist/main.css"
 
-function MessageList(props) {
+function MessageList({messageList, emailId, ...props}) {
    const dataSource=[
         {
           position:"left",
@@ -21,14 +21,14 @@ function MessageList(props) {
           id: 2
         },
         ]
-        const messages = (dataSource || []).map(message=>{
+        const messages = (messageList || []).map(message=>{
            return (<MessageBox 
-                position={message.name == 'Emre' ? 'left' : 'right'}
-                type={message.type}
-                title={message.name}
-                text={message.text}
-                date={new Date()}
-                key={message.id}
+                position={message.friends == emailId ? 'left' : 'right'}
+                type={'text'}
+                title={message.friends}
+                text={message.chat}
+                date={new Date(message.timestamp)}
+                key={message.friend}
             />)
           })
   return (

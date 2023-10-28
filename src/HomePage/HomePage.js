@@ -14,6 +14,8 @@ function HomePage(props) {
 
   const [friendList, setFriendList] = useState([])
 
+  const emailId='prajeshtest@gmail.com'
+
   const makeAPIRequest=()=>{
     fetch(server_chat_url +'/prajeshtest@gmail.com').then((res)=>{
       if(res && res.ok )
@@ -55,7 +57,7 @@ function HomePage(props) {
           <LeftSideBar onSelectFriend={onSelectFriend} friendList={friendList} selectedFriend={selectedFriend}/>
         </Col>
         <Col xs={6} sm={8} md={12} lg={15} xl={18}>
-          <ChatWindow />
+          <ChatWindow selectedFriend={selectedFriend} emailId={emailId}/>
         </Col>
       </Row>
     </div>

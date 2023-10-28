@@ -2,12 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import FallbackImage from './../Images/NicePng_watsapp-icon-png_9332131.png'
 
-function MessageTopBar(props) {
+function MessageTopBar({selectedFriend, ...props}) {
   return (
     <div className='message-top-bar'>
       <div className='top-bar-container'>
         <img src={FallbackImage} width={30} height={30} className='image'/>
-        <span className='user-name'>Emre</span>
+        <span className='user-name'>{selectedFriend || ""}</span>
       </div>
     </div>
   )
