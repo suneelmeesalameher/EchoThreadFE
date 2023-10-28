@@ -1,19 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import MessageList from '../Components/MessageList'
 import MessageInput from '../Components/MessageInput'
 import MessageTopBar from './MessageTopBar'
 
-function ChatWindow(props) {
+function ChatWindow({emailId, ...props}) {
 
   const [message, setMessage] = useState('')
   const [messageList, setMessageList] = useState([])
+  
 
-  const onChangMessage=(event)=>{
+  const onChangeMessage=(event)=>{
+    console.log('called!!!')
     if(event && event.target)
       setMessage(event.target.value)
-
   }
 
   return (
@@ -25,7 +26,7 @@ function ChatWindow(props) {
         <MessageList />
       </div>
       <div className='message-input-container'>
-        <MessageInput />
+        <MessageInput onChangeMessage={onChangeMessage}/>
       </div>
     </div>
   )

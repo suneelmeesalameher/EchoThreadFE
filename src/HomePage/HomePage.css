@@ -62,6 +62,9 @@
                 /*-webkit-transition: background-color 1000ms linear;*/
                 -ms-transition: background-color 500ms linear;
                 transition: background-color 500ms linear;
+                &.selected{
+                    background-color: #6AA602;
+                }
             }
             .contact-card:hover{
                 background-color: #6AA602;
