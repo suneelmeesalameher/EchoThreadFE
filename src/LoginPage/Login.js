@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { validateEmail } from '../UtilityFunctions'
+import { getHash } from '../CryptoUtility'
+import { server_url } from '../config'
+import { useNavigate } from 'react-router-dom'
 
 import { Button, Input, message } from 'antd'
 import {EyeTwoTone, EyeInvisibleOutlined} from '@ant-design/icons'
@@ -11,6 +14,9 @@ import { Link } from 'react-router-dom'
 function Login(props) {
     const [emailId, setEmailId] =useState('')
     const [password, setPassword] =useState('')
+    const [isLoading, setLoading] = useState(false)
+
+    let navigate=useNavigate()
 
     const onChangeEmail=(event)=>{
         setEmailId(event.target.value)
@@ -20,11 +26,41 @@ function Login(props) {
         setPassword(event.target.value)
     }
 
+    const clearState=()=>{
+        setEmailId('')
+        setPassword('')
+        setLoading(false)
+    }
+
     const onSubmitLogin=()=>{
         if(!validateEmail(emailId)){
             message.warning('Enter a valid Email')
             return
         }
+        const hashedPassword = getHash(password)
+        console.log(hashedPassword)
+        //process.env.REACT_APP_SERVER_URL
+        setLoading(true)
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ emailId: emailId, password: hashedPassword})
+        };
+        fetch(server_url+'/login', requestOptions).then((res)=>{
+            if(res && res.ok )
+                return res.json()
+            throw res
+        }).then(data=>{
+            console.log(data)
+            message.success('Login Successful', 1.5, ()=>{
+                clearState()
+                navigate('/home')
+            })
+        }).catch(err=>{
+            console.log(err)
+            message.error(err)
+            setLoading(false)
+        })
     }
 
   return (
@@ -40,7 +76,7 @@ function Login(props) {
                 <Input.Password id='password' placeholder='Enter Password' onChange={onChangePassword} value={password} iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
             </div>
             <div className='login-button'>
-                <Button onClick={onSubmitLogin} disabled={!emailId || !password}>Login</Button>
+                <Button onClick={onSubmitLogin} disabled={!emailId || !password} loading={isLoading} >Login</Button>
             </div>
             <Link to='/registration'><label className='link'>Register here!!</label></Link>
         </div>
