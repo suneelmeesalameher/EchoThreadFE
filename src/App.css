@@ -37,3 +37,27 @@
     transform: rotate(360deg);
   }
 }
+
+
+.rc-virtal-list{
+  height: 100px;
+  .rc-virtal-list-holder{
+      .rc-virtual-list-holder-inner{
+          .ant-select-item-option{
+              .ant-select-item-option-content{
+                  .ant-space{
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: space-between;
+                      .ant-space-item{
+                          .username{
+  
+                          }
+                      }
+                  }
+                  
+              }
+          }
+      }
+  }
+}

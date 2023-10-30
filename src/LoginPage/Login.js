@@ -11,7 +11,7 @@ import {EyeTwoTone, EyeInvisibleOutlined} from '@ant-design/icons'
 import './Login.css'
 import { Link } from 'react-router-dom'
 
-function Login(props) {
+function Login({changeUserStatus, ...props}) {
     const [emailId, setEmailId] =useState('')
     const [password, setPassword] =useState('')
     const [isLoading, setLoading] = useState(false)
@@ -52,6 +52,7 @@ function Login(props) {
             throw res
         }).then(data=>{
             console.log(data)
+            changeUserStatus(true)
             message.success('Login Successful', 1.5, ()=>{
                 clearState()
                 navigate('/home')

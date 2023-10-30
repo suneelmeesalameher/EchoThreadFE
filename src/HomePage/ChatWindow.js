@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
-import {message} from 'antd'
+import {message, Skeleton, Empty} from 'antd'
 import { makeAPIRequest, server_chat_url } from '../config'
 
 import MessageList from '../Components/MessageList'
@@ -12,34 +12,22 @@ function ChatWindow({selectedFriend, emailId, ...props}) {
 
   const [newMessage, setMessage] = useState('')
   const [messageList, setMessageList] = useState([])
-
-  // const formatMessageList=(messages, emailId)=>{
-  //   const formattedList = (messages || []).map(message=>{
-  //     let obj={
-  //       ...message,
-  //       emailId: emailId
-  //     }
-  //     return obj
-  //   })
-  //   return formattedList
-  // }
+  const [isLoadingMessages, setLoadingMessages] = useState(false)
   
   useEffect(()=>{
+    if(selectedFriend)
+      setLoadingMessages(true)
     if(selectedFriend && emailId){
       fetch(server_chat_url+emailId+'/'+selectedFriend).then((res)=>{
         if(res && res.ok )
             return res.json()
         throw res
     }).then(data=>{
-        console.log(data.recieved)
         const receivedMessages = ((data && data.recieved) || [])
-        console.log(receivedMessages,'receivedMessages')
         const sentMessages = ((data && data.sent) || [])
-        console.log(sentMessages,'sentMessages')
         const finalMessageList = ([... receivedMessages, ...sentMessages]).sort((a,b) => a.timestamp - b.timestamp)
         setMessageList(finalMessageList)
-        //setMessageList()
-        
+        setLoadingMessages(false)
     }).catch(err=>{
         console.log(err)
         message.error(err)
@@ -78,14 +66,17 @@ function ChatWindow({selectedFriend, emailId, ...props}) {
       message.error(err)
   })
   }
-
+  const loadedData = <MessageList messageList={messageList} emailId={emailId}/>
+  const emptyData = <Empty description="No Messages"/>
   return (
     <div className='chat-window'>
       <div className='chat-top-bar'>
         <MessageTopBar selectedFriend={selectedFriend}/>
       </div>
       <div className='message-window'>
-        <MessageList messageList={messageList} emailId={emailId}/>
+        <Skeleton loading={isLoadingMessages} active>
+          {selectedFriend && messageList.length > 0 ? loadedData : emptyData}
+        </Skeleton>
       </div>
       <div className='message-input-container'>
         <MessageInput onChangeMessage={onChangeMessage} onMessageSend={onMessageSend} newMessage={newMessage} />

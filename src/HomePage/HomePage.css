@@ -18,7 +18,7 @@
                     fill: #779191;
                     /*transform: scale(1.2);*/
                 }
-                .anticon-message{
+                .anticon-user-add{
                     >svg{
                         width: 25px;
                         height: 25px;
@@ -32,6 +32,12 @@
             .section2{
                 height: 50%;
             }
+
+        .search-bar{
+            .ant-select-selection-item{
+                display: none;
+            }
+        }
         }
         .list-contacts{
             .contact-card{
@@ -97,6 +103,13 @@
             .message-window{
                 height: 570px;
                 border: 1px solid #4f5454;
+                .ant-empty{
+                    align-self: center;
+                    padding: 50px;
+                    .ant-empty-description{
+                        color: white;
+                    }
+                }
                 .message-list{
                     max-height:570px;
                     .rce-container-mbox{
@@ -114,7 +127,7 @@
                 }
             }
             .message-input-container{
-                width: 800px;
+                width: 80%;
                 padding: 10px;
                 .message-box{
                     width: 100%;
@@ -132,6 +145,32 @@
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+    .ant-skeleton-image{
+        background: linear-gradient(90deg, rgb(78 224 0 / 6%) 25%, rgb(31 255 9 / 15%) 37%, rgb(0 255 6 / 6%) 63%) !important;
+    }
+}
+
+.rc-virtal-list{
+    height: 100px;
+    .rc-virtal-list-holder{
+        .rc-virtual-list-holder-inner{
+            .ant-select-item-option{
+                .ant-select-item-option-content{
+                    .ant-space{
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        .ant-space-item{
+                            .username{
+    
+                            }
+                        }
+                    }
+                    
                 }
             }
         }
