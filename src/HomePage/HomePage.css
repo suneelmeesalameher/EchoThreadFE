@@ -137,6 +137,9 @@
                         margin-left: 50px;
                         .ant-input-suffix{
                             width: 30px;
+                            .anticon-loading{
+                                width: auto;
+                            }
                             >span{
                                 width: 25px;
                                 height: 25px;

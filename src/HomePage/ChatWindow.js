@@ -13,6 +13,7 @@ function ChatWindow({selectedFriend, emailId, ...props}) {
   const [newMessage, setMessage] = useState('')
   const [messageList, setMessageList] = useState([])
   const [isLoadingMessages, setLoadingMessages] = useState(false)
+  const [isSendingMessage, setSendingMessage] = useState(false)
   
   useEffect(()=>{
     if(selectedFriend)
@@ -46,6 +47,7 @@ function ChatWindow({selectedFriend, emailId, ...props}) {
       message.error('Please enter a message')
       return
     }
+    setSendingMessage(true)
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -59,11 +61,13 @@ function ChatWindow({selectedFriend, emailId, ...props}) {
       console.log(data)
       message.success('Message Successfully Sent', 1, ()=>{
         setMessage(null)
+        setSendingMessage(false)
       })
       
   }).catch(err=>{
       console.log(err)
       message.error(err)
+      setSendingMessage(false)
   })
   }
   const loadedData = <MessageList messageList={messageList} emailId={emailId}/>
@@ -79,7 +83,7 @@ function ChatWindow({selectedFriend, emailId, ...props}) {
         </Skeleton>
       </div>
       <div className='message-input-container'>
-        <MessageInput onChangeMessage={onChangeMessage} onMessageSend={onMessageSend} newMessage={newMessage} />
+        <MessageInput onChangeMessage={onChangeMessage} onMessageSend={onMessageSend} newMessage={newMessage} isSendingMessage={isSendingMessage}/>
       </div>
     </div>
   )
