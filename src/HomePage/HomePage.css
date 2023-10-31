@@ -11,8 +11,9 @@
             border-bottom: 1px solid #4f5454;
             .section1{
                 height: 50%;
-                display: flex;
-                justify-content: space-between;
+                /* display: flex;
+                justify-content: space-between; */
+                align-self: center;
                 padding: 20px;
                 >h3:hover{
                     fill: #779191;
@@ -103,6 +104,7 @@
             .message-window{
                 height: 570px;
                 border: 1px solid #4f5454;
+                overflow: auto;
                 .ant-empty{
                     align-self: center;
                     padding: 50px;
@@ -154,9 +156,9 @@
     }
 }
 
-.rc-virtal-list{
-    height: 100px;
-    .rc-virtal-list-holder{
+.rc-virtual-list{
+    /* height: 100px; */
+    .rc-virtual-list-holder{
         .rc-virtual-list-holder-inner{
             .ant-select-item-option{
                 .ant-select-item-option-content{
@@ -166,7 +168,9 @@
                         justify-content: space-between;
                         .ant-space-item{
                             .username{
-    
+                                max-width: 80%;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
                             }
                         }
                     }

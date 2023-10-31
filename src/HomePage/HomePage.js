@@ -8,16 +8,24 @@ import ChatWindow from './ChatWindow'
 
 import{Row, Col, message} from "antd"
 import "./HomePage.css"
+import { useParams } from 'react-router-dom'
 
-function HomePage(props) {
+function HomePage({user, ...props}) {
   const [selectedFriend, setSelectedFriend] = useState(null)
 
   const [friendList, setFriendList] = useState([])
+  let id = useParams()
 
-  const emailId='prajeshtest@gmail.com'
+
+  useEffect(()=>{
+    
+  },[user])
+
+  const emailId = (id.id == user.userId) ? user.emailId : null
+  //const emailId = 'prajeshtest@gmail.com'
 
   const makeAPIRequest=()=>{
-    fetch(server_chat_url +'/prajeshtest@gmail.com').then((res)=>{
+    fetch(server_chat_url +emailId).then((res)=>{
       if(res && res.ok )
           return res.json()
       throw res

@@ -9,6 +9,7 @@ import HomePage from './HomePage/HomePage'
 function RouterApp({...props}) {
 
   const [userLoggedIn, setUserLoggedIn] = useState(false)
+  const [user, setUser] = useState(null)
 
   const changeUserStatus=(value)=>{
     setUserLoggedIn(value)
@@ -20,9 +21,9 @@ function RouterApp({...props}) {
 
   const routeList=[
     {
-    name: 'login',
-    validationRequired: false,
-    jsx: (<Route path='/login' element={<Login changeUserStatus={changeUserStatus} />} key='login'/>)
+      name: 'login',
+      validationRequired: false,
+      jsx: (<Route path='/login' element={<Login changeUserStatus={changeUserStatus}  setUser={setUser}/>} key='login'/>)
     },
     {
       name: 'registration',
@@ -32,7 +33,7 @@ function RouterApp({...props}) {
     {
       name: 'home',
       validationRequired: true,
-      jsx: (<Route path='/home' element={<HomePage />} key='home'/>)
+      jsx: (<Route path='/home/:id' element={<HomePage user={user}/>} key='home'/>)
     }
   ]
 
@@ -62,7 +63,7 @@ function RouterApp({...props}) {
             <Route path='/login' element={<Login />} />
             <Route path='/registration' element={<Registration />} />
             <Route path='/home' element={<HomePage />} /> */}
-            <Route path='/' element={<Login />} />
+            <Route path='/' element={<Login changeUserStatus={changeUserStatus} setUser={setUser}/>} />
             {getRoutes()}
         </Routes>
       </Router>

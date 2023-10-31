@@ -58,8 +58,7 @@ function TopBar({emailId, updateFriendList, ...props}) {
   return (
     <div className='top-bar'>
       <div className='section1'>
-        <h3>Threads</h3>
-        <UserAddOutlined /> 
+        <h3>Echo Threads</h3>
       </div>
       <div className='section2'>
         <div className='search-bar'>
