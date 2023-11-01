@@ -36,12 +36,12 @@ function DebounceSelect({ fetchOptions, debounceTimeout = 300, onSelectUser, ...
               </Option>)
               return jsxOption
           })
-          
           setOptions(optionList);
           setFetching(false);
         });
         setOptions([])
       }
+      setOptions([])
      
     };
     return debounce(loadOptions, debounceTimeout);
