@@ -2,14 +2,49 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import {message, Skeleton, Empty} from 'antd'
-import { makeAPIRequest, server_chat_url } from '../config'
+import { server_chat_url } from '../config'
 
 import MessageList from '../Components/MessageList'
 import MessageInput from '../Components/MessageInput'
 import MessageTopBar from './MessageTopBar'
+//import { generateRSAKey, rsaEncryptMessage, rsaDecryptMessage } from '../CryptoUtility'
 
 function ChatWindow({selectedFriend, emailId, ...props}) {
-
+  // let enc =  new TextEncoder()
+  // let dec= new TextDecoder()
+  // const keyPair = {'privateKey': null, 'publicKey': null}
+  // let encryptedMessage=null
+  // generateRSAKey().then(data=>{
+  //   //console.log('keypair:' ,data.publicKey)
+  //   if(data){
+  //     keyPair.privateKey = data.privateKey
+  //     keyPair.publicKey = data.publicKey
+  //     //console.log('Private: ', keyPair.privateKey)
+  //     //console.log('keypair: ', keyPair)
+  //     encryptedMessage = rsaEncryptMessage(data.publicKey,enc.encode('Hey There!!!')).then(res=>{
+  //       console.log(res, 'encrypted message')
+  //       //console.log(dec.decode(res))
+  //       //return dec.decode(res)
+  //       rsaDecryptMessage(keyPair.privateKey, res).then(res=>{
+  //         console.log(dec.decode(res),'decrypted message')
+  //         //return res
+  //       }).catch(err=>{
+  //         console.log(err)
+  //       })
+  //     }).catch(err=>{
+  //       console.log(err)
+  //     })
+  //   }
+  // })
+  
+  
+  
+  
+  // //const encryptedMessage = rsaEncryptMessage(keyPair.publicKey,'Hey There!!!').then(res=>{
+  //   //console.log(res)
+  //   return res
+  // })
+  // console.log(encryptedMessage,'encrypted Message')
   const [newMessage, setMessage] = useState('')
   const [messageList, setMessageList] = useState([])
   const [isLoadingMessages, setLoadingMessages] = useState(false)
@@ -59,7 +94,7 @@ function ChatWindow({selectedFriend, emailId, ...props}) {
       throw res
   }).then(data=>{
       console.log(data)
-      message.success('Message Successfully Sent', 1, ()=>{
+      message.success('Message Successfully Sent', 0.8, ()=>{
         setMessage(null)
         setSendingMessage(false)
       })
