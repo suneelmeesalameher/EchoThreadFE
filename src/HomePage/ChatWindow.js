@@ -38,13 +38,6 @@ function ChatWindow({selectedFriend, emailId, ...props}) {
   // })
   
   
-  
-  
-  // //const encryptedMessage = rsaEncryptMessage(keyPair.publicKey,'Hey There!!!').then(res=>{
-  //   //console.log(res)
-  //   return res
-  // })
-  // console.log(encryptedMessage,'encrypted Message')
   const [newMessage, setMessage] = useState('')
   const [messageList, setMessageList] = useState([])
   const [isLoadingMessages, setLoadingMessages] = useState(false)

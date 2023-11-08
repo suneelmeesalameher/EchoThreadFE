@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 import ListContacts from '../Components/ListContacts'
 import TopBar from './TopBar'
 
-function LeftSideBar({onSelectFriend, friendList, selectedFriend, emailId, updateFriendList, ...props}) {
+function LeftSideBar({onSelectFriend, friendList, selectedFriend, emailId, updateFriendList, keyPair, ...props}) {
   return (
     <div className='left-side-bar'>
-        <TopBar emailId={emailId} updateFriendList={updateFriendList} />
+        <TopBar emailId={emailId} updateFriendList={updateFriendList} keyPair={keyPair}/>
         <ListContacts onSelectFriend={onSelectFriend} friendList={friendList} selectedFriend={selectedFriend}/>
     </div>
   )
