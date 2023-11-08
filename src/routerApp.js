@@ -8,7 +8,7 @@ import HomePage from './HomePage/HomePage'
 
 function RouterApp({...props}) {
 
-  const [userLoggedIn, setUserLoggedIn] = useState(true)
+  const [userLoggedIn, setUserLoggedIn] = useState(false)
   const [user, setUser] = useState(null)
 
   const changeUserStatus=(value)=>{

@@ -43,8 +43,8 @@ const aesDecrypt=(iv, key ,data)=>{
 }
 
 //fn to export key from cryptoKey obj to external format
-const exportKey=(key)=>{
-    return crypto.subtle.exportKey("raw", key)
+const exportKey=(format, key)=>{
+    return crypto.subtle.exportKey(format, key)
 }
 
 //fn to import key from external format to cryptoKey obj
@@ -98,6 +98,10 @@ function ab2str(buf) {
     return btoa(String.fromCharCode.apply(null, buf))
 }
 
+function ab2str2(buf) {
+    return btoa(String.fromCharCode.apply(null,new Uint8Array(buf)))
+}
+
 function str2ab(str) {
     const decodedIvString = atob(str);
     const ivArray = new Uint8Array(decodedIvString.length);
@@ -105,7 +109,29 @@ function str2ab(str) {
       ivArray[i] = decodedIvString.charCodeAt(i);
     }
     return ivArray
-} 
+}
 
+function arrayBufferToBase64(arrayBuffer) {
+    const uint8Array = new Uint8Array(arrayBuffer);
+    const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
+    return base64String;
+  }
 
-export {getHash, generateRSAKey, rsaEncryptMessage, rsaDecryptMessage, generateSharedKey, aesEncrypt, aesDecrypt, exportKey, importKey, wrapKey, unwrapKey, ab2str, str2ab};
+  function base64ToArrayBuffer(base64String) {
+    const binaryString = atob(base64String);
+    const uint8Array = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      uint8Array[i] = binaryString.charCodeAt(i);
+    }
+    return uint8Array.buffer;
+  }
+
+  function arraysEqual(a, b) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+
+export {getHash, generateRSAKey, rsaEncryptMessage, rsaDecryptMessage, generateSharedKey, aesEncrypt, aesDecrypt, exportKey, importKey, wrapKey, unwrapKey, ab2str, str2ab, ab2str2, arrayBufferToBase64, base64ToArrayBuffer, arraysEqual};

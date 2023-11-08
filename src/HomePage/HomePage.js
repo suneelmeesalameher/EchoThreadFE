@@ -45,6 +45,9 @@ function HomePage({user, ...props}) {
   const [selectedFriend, setSelectedFriend] = useState(null)
 
   const [friendList, setFriendList] = useState([])
+  const [friendsKey, setFriendsKey] = useState([])
+  const [sharedKey, setSharedKey] = useState({})
+
   let id = useParams()
 
 
@@ -52,8 +55,8 @@ function HomePage({user, ...props}) {
     
   },[user])
 
-  //const emailId = (id.id == user.userId) ? user.emailId : null
-  const emailId = 'key1@gmail.com'
+  const emailId = (id.id == user.userId) ? user.emailId : null
+  //const emailId = 'key1@gmail.com'
 
   const makeAPIRequest=()=>{
     fetch(server_chat_url +emailId).then((res)=>{
@@ -64,6 +67,7 @@ function HomePage({user, ...props}) {
       console.log(data)
       if(data && data.data){
         setFriendList(data.data.friends)
+        setFriendsKey(data.key)
       }
       message.success('Friend list generated')
     }).catch(err=>{
@@ -82,12 +86,26 @@ function HomePage({user, ...props}) {
 
 
   const onSelectFriend=(value)=>{
-    if(value)
+    if(value){
       setSelectedFriend(value)
+
+      console.log(selectedFriend,'selectedfriend')
+      const sharedKey = (friendsKey || []).find(item=>{
+        console.log(item,'item')
+        if(item.friend == value){
+          console.log(item,'selected Item!!!!')
+          return item
+        }
+          
+      })
+      setSharedKey(sharedKey)
+    }
+      
   }
 
   const updateFriendList=(friend)=>{
     const newFriendList=[...friendList, friend]
+    makeAPIRequest()
     setFriendList(newFriendList)
   }
 
@@ -95,10 +113,10 @@ function HomePage({user, ...props}) {
     <div className='home-page'>
       <Row>
         <Col xs={4} sm={4} md={4} lg={5} xl={6}>
-          <LeftSideBar onSelectFriend={onSelectFriend} friendList={friendList} selectedFriend={selectedFriend} emailId={emailId} updateFriendList={updateFriendList} keyPair={keyPair}/>
+          <LeftSideBar onSelectFriend={onSelectFriend} friendList={friendList} selectedFriend={selectedFriend} emailId={emailId} updateFriendList={updateFriendList} keyPair={keyPair} setFriendsKey={setFriendsKey}/>
         </Col>
         <Col xs={6} sm={8} md={12} lg={15} xl={18}>
-          <ChatWindow selectedFriend={selectedFriend} emailId={emailId}/>
+          <ChatWindow selectedFriend={selectedFriend} emailId={emailId} sharedKey={sharedKey}/>
         </Col>
       </Row>
     </div>
