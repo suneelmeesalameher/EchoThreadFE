@@ -31,7 +31,7 @@ function DebounceSelect({ fetchOptions, debounceTimeout = 300, onSelectUser, ...
               <Option value={item.value} label={item.label} key={item.value}>
                 <Space>
                   <span className='username'>{item.label}</span>
-                  <span><UserAddOutlined onClick={()=>{onSelectUser(item.label)}}/></span>
+                  <span><UserAddOutlined onClick={()=>{onSelectUser(item)}}/></span>
                 </Space>
               </Option>)
               return jsxOption
@@ -72,6 +72,7 @@ async function fetchUserList(username) {
       body.map((user) => ({
         label: `${user.emailId}`,
         value: user.userId,
+        rsaKey: user.rsaKey
       })),
     );
 }

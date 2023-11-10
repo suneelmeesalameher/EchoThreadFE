@@ -8,8 +8,9 @@ import HomePage from './HomePage/HomePage'
 
 function RouterApp({...props}) {
 
-  const [userLoggedIn, setUserLoggedIn] = useState(false)
+  const [userLoggedIn, setUserLoggedIn] = useState(true)
   const [user, setUser] = useState(null)
+  const [userKey, setUserKey] = useState(null)
 
   const changeUserStatus=(value)=>{
     setUserLoggedIn(value)
@@ -23,7 +24,7 @@ function RouterApp({...props}) {
     {
       name: 'login',
       validationRequired: false,
-      jsx: (<Route path='/login' element={<Login changeUserStatus={changeUserStatus}  setUser={setUser}/>} key='login'/>)
+      jsx: (<Route path='/login' element={<Login changeUserStatus={changeUserStatus}  setUser={setUser} setUserKey={setUserKey}/>} key='login'/>)
     },
     {
       name: 'registration',
@@ -33,7 +34,7 @@ function RouterApp({...props}) {
     {
       name: 'home',
       validationRequired: true,
-      jsx: (<Route path='/home/:id' element={<HomePage user={user}/>} key='home'/>)
+      jsx: (<Route path='/home/:id' element={<HomePage user={user} userKey={userKey} setUserKey={setUserKey}/>} key='home'/>)
     }
   ]
 

@@ -52,6 +52,14 @@ const importKey=( format, key, algorithm)=>{
     return crypto.subtle.importKey(format, key, algorithm, true, ['encrypt','decrypt'])
 }
 
+const importDiffieKey=( format, key, algorithm)=>{
+    return crypto.subtle.importKey(format, key, algorithm, true, [])
+}
+
+const importRSAKey=( format, key, algorithm, usage)=>{
+    return crypto.subtle.importKey(format, key, algorithm, true, usage)
+}
+
 //function to generate RSA keyPair
 const generateRSAKey=()=>{
    const keyPair = crypto.subtle.generateKey({
@@ -94,6 +102,30 @@ const rsaDecryptMessage=(privateKey, data)=>{
     data);
 }
 
+
+const generateDiffieKeyPair=()=>{
+    return crypto.subtle.generateKey({
+        name: "ECDH",
+        namedCurve: "P-384"
+    },
+    true,
+    ['deriveKey'])
+}
+
+const deriveSecretKey=(privateKey, publicKey)=>{
+    return crypto.subtle.deriveKey({
+        name: 'ECDH',
+        public: publicKey
+    },
+    privateKey,
+    {
+        name: 'AES-GCM',
+        length: 256,
+    },
+    true,
+    ['encrypt','decrypt'])
+}
+
 function ab2str(buf) {
     return btoa(String.fromCharCode.apply(null, buf))
 }
@@ -134,4 +166,4 @@ function arrayBufferToBase64(arrayBuffer) {
     return true;
   }
 
-export {getHash, generateRSAKey, rsaEncryptMessage, rsaDecryptMessage, generateSharedKey, aesEncrypt, aesDecrypt, exportKey, importKey, wrapKey, unwrapKey, ab2str, str2ab, ab2str2, arrayBufferToBase64, base64ToArrayBuffer, arraysEqual};
+export {getHash, generateRSAKey, rsaEncryptMessage, rsaDecryptMessage, generateSharedKey, aesEncrypt, aesDecrypt, exportKey, importKey, wrapKey, unwrapKey, ab2str, str2ab, ab2str2, arrayBufferToBase64, base64ToArrayBuffer, arraysEqual, importRSAKey, generateDiffieKeyPair, deriveSecretKey, importDiffieKey};

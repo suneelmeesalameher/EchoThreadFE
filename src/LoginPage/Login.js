@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import { validateEmail } from '../UtilityFunctions'
 import { getHash } from '../CryptoUtility'
+import { performReadTransaction } from '../indexDBUtility'
 import { server_url } from '../config'
 import { useNavigate } from 'react-router-dom'
 
@@ -11,7 +12,7 @@ import {EyeTwoTone, EyeInvisibleOutlined} from '@ant-design/icons'
 import './Login.css'
 import { Link } from 'react-router-dom'
 
-function Login({changeUserStatus, setUser, ...props}) {
+function Login({changeUserStatus, setUser, setUserKey, ...props}) {
     const [emailId, setEmailId] =useState('')
     const [password, setPassword] =useState('')
     const [isLoading, setLoading] = useState(false)
@@ -50,10 +51,20 @@ function Login({changeUserStatus, setUser, ...props}) {
             if(res && res.ok )
                 return res.json()
             throw res
-        }).then(data=>{
+        }).then(async data=>{
             console.log('data',data)
             if(data && data.data){
+                const loginData={
+                    ...data.data,
+                    time: new Date()
+                }
+                localStorage.setItem('loginData',JSON.stringify(loginData))
                 setUser(data.data)
+                performReadTransaction(data.data.userId).then(res=>{
+                    console.log('userData:', res)
+                    setUserKey(res.privateKey)
+                })
+
             }
             changeUserStatus(true)
             message.success('Login Successful', 1.5, ()=>{

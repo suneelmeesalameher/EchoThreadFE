@@ -10,7 +10,7 @@ import MessageTopBar from './MessageTopBar'
 import { base64ToArrayBuffer, importKey, str2ab, aesEncrypt, arrayBufferToBase64, ab2str, aesDecrypt } from '../CryptoUtility'
 //import { generateRSAKey, rsaEncryptMessage, rsaDecryptMessage } from '../CryptoUtility'
 
-function ChatWindow({selectedFriend, emailId, sharedKey, ...props}) {
+function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) {
   // let enc =  new TextEncoder()
   // let dec= new TextDecoder()
   // const keyPair = {'privateKey': null, 'publicKey': null}
@@ -54,6 +54,7 @@ function ChatWindow({selectedFriend, emailId, sharedKey, ...props}) {
             return res.json()
         throw res
     }).then(async (data)=>{
+      
         const dec=new TextDecoder()
         const receivedMessages = ((data && data.recieved) || [])
         const sentMessages = ((data && data.sent) || [])
@@ -64,19 +65,18 @@ function ChatWindow({selectedFriend, emailId, sharedKey, ...props}) {
               const newMsg ={
                 ...msg
               }
-              debugger
-              const iv = str2ab(sharedKey.iv)
+              const iv = str2ab(friendData.iv)
               console.log('iv is:', iv)
-              const enc=new TextEncoder()
+              //const enc=new TextEncoder()
               const dec = new TextDecoder()
-              const importedKeyBuffer = base64ToArrayBuffer(sharedKey.key)
-              const importedKey =await  importKey("raw", importedKeyBuffer, "AES-GCM")
-              console.log('importedKey is:',importedKey)
+              // const importedKeyBuffer = base64ToArrayBuffer(friendData.key)
+              // const importedKey =await  importKey("raw", importedKeyBuffer, "AES-GCM")
+              // console.log('importedKey is:',importedKey)
               const newChatMsg=base64ToArrayBuffer(msg.chat)
               console.log('newChatMSG:', newChatMsg)
               //const decData = enc.encode(newMessage)
              
-              const plainText =await aesDecrypt(iv, importedKey, newChatMsg)
+              const plainText =await aesDecrypt(iv, sharedKey, newChatMsg)
               console.log('plainText is:', plainText)
               const plainTextString = dec.decode(plainText)
               console.log("Plaintext is: ", plainTextString)
@@ -99,35 +99,44 @@ function ChatWindow({selectedFriend, emailId, sharedKey, ...props}) {
     })
     }
     }
+    console.log('rerendering chat window!!!')
     fetchData()
     
     
-  },[selectedFriend, emailId])
+  },[selectedFriend, emailId, sharedKey])
 
-  const tempfunction=async()=>{
-    const tempmessage=[{
-      "friends": "key1@gmail.com",
-      "chat": "lEoTRO5UqTapWpez2jWTpRM=",
-      "timestamp": 1699484273828
-  }
-  ]
-  debugger
-  console.log("encrypted String :",tempmessage[0].chat)
-  const iv = str2ab(sharedKey.iv)
-  console.log('iv is:', iv)
-  const enc=new TextEncoder()
-  const dec = new TextDecoder()
-  const importedKeyBuffer = base64ToArrayBuffer(sharedKey.key)
-  const importedKey =await  importKey("raw", importedKeyBuffer, "AES-GCM")
-  console.log('importedKey is:',importedKey)
-  const newChatMsg=base64ToArrayBuffer(tempmessage[0].chat)
-  console.log('newChatMSG:', newChatMsg)
-  //const decData = enc.encode(newMessage)
+  // const tempfunction=async()=>{
+  //   const tempmessage=[{
+  //     "friends": "key1@gmail.com",
+  //     "chat": "lEoTRO5UqTapWpez2jWTpRM=",
+  //     "timestamp": 1699484273828
+  // }
+  // ]
+  // debugger
+  // console.log("encrypted String :",tempmessage[0].chat)
+  // const iv = str2ab(friendData.iv)
+  // console.log('iv is:', iv)
+  // const enc=new TextEncoder()
+  // const dec = new TextDecoder()
+  // const importedKeyBuffer = base64ToArrayBuffer(friendData.key)
+  // const importedKey =await  importKey("raw", importedKeyBuffer, "AES-GCM")
+  // console.log('importedKey is:',importedKey)
+  // const newChatMsg=base64ToArrayBuffer(tempmessage[0].chat)
+  // console.log('newChatMSG:', newChatMsg)
+  // //const decData = enc.encode(newMessage)
  
-  const plainText =await aesDecrypt(iv, importedKey, newChatMsg)
-  console.log('plainText is:', plainText)
-  const finalPlainText = dec.decode(plainText)
-  console.log('finalPlainText :',finalPlainText)
+  // const plainText =await aesDecrypt(iv, importedKey, newChatMsg)
+  // console.log('plainText is:', plainText)
+  // const finalPlainText = dec.decode(plainText)
+  // console.log('finalPlainText :',finalPlainText)
+  // }
+
+  const onEnterKeyPress=(event)=>{
+    console.log('registered keydown')
+    if(event.keyCode == '13'){
+      console.log('enterkey pressed')
+      onMessageSend()
+    }
   }
 
   const onChangeMessage=(event)=>{
@@ -141,14 +150,16 @@ function ChatWindow({selectedFriend, emailId, sharedKey, ...props}) {
       return
     }
     setSendingMessage(true)
-    const importedKeyBuffer = base64ToArrayBuffer(sharedKey.key)
-    const importedKey =await importKey("raw", importedKeyBuffer, "AES-GCM")
+    // const importedKeyBuffer = base64ToArrayBuffer(friendData.key)
+    // const importedKey =await importKey("raw", importedKeyBuffer, "AES-GCM")
 
-    const iv = str2ab(sharedKey.iv)
+    const iv = str2ab(friendData.iv)
+    console.log('iv :', iv)
     const enc = new TextEncoder()
     const encData = enc.encode(newMessage)
     console.log("encrypted message buffer", encData)
-    const cipherText =await aesEncrypt(iv, importedKey, encData)
+    const cipherText =await aesEncrypt(iv, sharedKey, encData)
+    console.log('cipherText: ',cipherText)
     const cipherTextString = arrayBufferToBase64(cipherText)
     console.log('cipherTextString: ',cipherTextString)
     const requestOptions = {
@@ -186,7 +197,7 @@ function ChatWindow({selectedFriend, emailId, sharedKey, ...props}) {
         </Skeleton>
       </div>
       <div className='message-input-container'>
-        <MessageInput onChangeMessage={onChangeMessage} onMessageSend={onMessageSend} newMessage={newMessage} isSendingMessage={isSendingMessage}/>
+        <MessageInput onChangeMessage={onChangeMessage} onMessageSend={onMessageSend} newMessage={newMessage} isSendingMessage={isSendingMessage} onEnterKeyPress={onEnterKeyPress} />
       </div>
     </div>
   )
