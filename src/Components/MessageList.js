@@ -12,7 +12,7 @@ function MessageList({messageList, emailId, ...props}) {
                 title={message.friends}
                 text={message.chat}
                 date={new Date(message.timestamp)}
-                key={message.friend}
+                key={message.timestamp}
             />)
           })
   return (

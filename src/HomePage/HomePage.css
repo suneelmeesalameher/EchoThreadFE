@@ -40,6 +40,13 @@
             }
         }
         }
+        .spin-loader{
+            height: calc(100% - 160px);
+            .ant-spin{
+                padding-top: calc(100% - 100px);
+            }
+
+        }
         .list-contacts{
             .contact-card{
                 border-bottom: 1px solid #4f5454;
@@ -85,6 +92,13 @@
         .chat-window{
             width: 100%;
             min-height: 700px;
+            .spin-loader{
+                height: 570px;
+                
+                .ant-spin{
+                    padding-top: calc(100% - 650px);
+                }
+            }
             .chat-top-bar{
                 height: 80px;
                 .message-top-bar{
@@ -148,6 +162,27 @@
                                 fill: #6AA602;
                                 transform: scale(1.2);
                             }
+                        }
+                    }
+                    .ant-input-affix-wrapper-disabled{
+                        background-color: aliceblue;
+                        margin-left: 50px;
+                        color:#282c34;
+                        .ant-input-suffix{
+                            width: 30px;
+                            .anticon-loading{
+                                width: auto;
+                            }
+                            >span{
+                                width: 25px;
+                                height: 25px;
+                            }
+                            >span:hover{
+                                fill: #6AA602;
+                                transform: scale(1.2);
+                            }
+                        }:hover{
+                            cursor: not-allowed;
                         }
                     }
                 }

@@ -8,6 +8,7 @@ import MessageList from '../Components/MessageList'
 import MessageInput from '../Components/MessageInput'
 import MessageTopBar from './MessageTopBar'
 import { base64ToArrayBuffer, importKey, str2ab, aesEncrypt, arrayBufferToBase64, ab2str, aesDecrypt } from '../CryptoUtility'
+import SpinLoader from '../Components/SpinLoader'
 //import { generateRSAKey, rsaEncryptMessage, rsaDecryptMessage } from '../CryptoUtility'
 
 function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) {
@@ -66,20 +67,10 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
                 ...msg
               }
               const iv = str2ab(friendData.iv)
-              console.log('iv is:', iv)
-              //const enc=new TextEncoder()
               const dec = new TextDecoder()
-              // const importedKeyBuffer = base64ToArrayBuffer(friendData.key)
-              // const importedKey =await  importKey("raw", importedKeyBuffer, "AES-GCM")
-              // console.log('importedKey is:',importedKey)
               const newChatMsg=base64ToArrayBuffer(msg.chat)
-              console.log('newChatMSG:', newChatMsg)
-              //const decData = enc.encode(newMessage)
-             
               const plainText =await aesDecrypt(iv, sharedKey, newChatMsg)
-              console.log('plainText is:', plainText)
               const plainTextString = dec.decode(plainText)
-              console.log("Plaintext is: ", plainTextString)
               newMsg.chat=plainTextString
               return newMsg
             }
@@ -95,46 +86,17 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
         setLoadingMessages(false)
     }).catch(err=>{
         console.log(err)
-        message.error(err.message)
+       // message.error(err.message)
     })
     }
     }
-    console.log('rerendering chat window!!!')
     fetchData()
     
     
   },[selectedFriend, emailId, sharedKey])
 
-  // const tempfunction=async()=>{
-  //   const tempmessage=[{
-  //     "friends": "key1@gmail.com",
-  //     "chat": "lEoTRO5UqTapWpez2jWTpRM=",
-  //     "timestamp": 1699484273828
-  // }
-  // ]
-  // debugger
-  // console.log("encrypted String :",tempmessage[0].chat)
-  // const iv = str2ab(friendData.iv)
-  // console.log('iv is:', iv)
-  // const enc=new TextEncoder()
-  // const dec = new TextDecoder()
-  // const importedKeyBuffer = base64ToArrayBuffer(friendData.key)
-  // const importedKey =await  importKey("raw", importedKeyBuffer, "AES-GCM")
-  // console.log('importedKey is:',importedKey)
-  // const newChatMsg=base64ToArrayBuffer(tempmessage[0].chat)
-  // console.log('newChatMSG:', newChatMsg)
-  // //const decData = enc.encode(newMessage)
- 
-  // const plainText =await aesDecrypt(iv, importedKey, newChatMsg)
-  // console.log('plainText is:', plainText)
-  // const finalPlainText = dec.decode(plainText)
-  // console.log('finalPlainText :',finalPlainText)
-  // }
-
   const onEnterKeyPress=(event)=>{
-    console.log('registered keydown')
     if(event.keyCode == '13'){
-      console.log('enterkey pressed')
       onMessageSend()
     }
   }
@@ -191,13 +153,13 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
       <div className='chat-top-bar'>
         <MessageTopBar selectedFriend={selectedFriend}/>
       </div>
-      <div className='message-window'>
-        <Skeleton loading={isLoadingMessages} active>
+      {!isLoadingMessages ? <div className='message-window'>
+        {/* <Skeleton loading={isLoadingMessages } active> */}
           {selectedFriend && messageList.length > 0 ? loadedData : emptyData}
-        </Skeleton>
-      </div>
+        {/* </Skeleton> */}
+      </div> : <SpinLoader size={70}/>}
       <div className='message-input-container'>
-        <MessageInput onChangeMessage={onChangeMessage} onMessageSend={onMessageSend} newMessage={newMessage} isSendingMessage={isSendingMessage} onEnterKeyPress={onEnterKeyPress} />
+        <MessageInput onChangeMessage={onChangeMessage} onMessageSend={onMessageSend} newMessage={newMessage} isSendingMessage={isSendingMessage} onEnterKeyPress={onEnterKeyPress} isLoadingMessages={isLoadingMessages}/>
       </div>
     </div>
   )

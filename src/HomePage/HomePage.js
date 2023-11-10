@@ -11,7 +11,7 @@ import ChatWindow from './ChatWindow'
 
 import{Row, Col, message} from "antd"
 import "./HomePage.css"
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 function HomePage({user, userKey, setUserKey, ...props}) {
 
@@ -52,8 +52,10 @@ function HomePage({user, userKey, setUserKey, ...props}) {
   const [selectedPublicKey, setSelectedPublicKey] = useState({})
   const [sharedKey, setSharedKey] = useState({})
   const [emailID, setEmailID] = useState(null)
+  const [isListLoading, setListLoading] = useState(true)
 
   let id = useParams()
+  const navigate = useNavigate()
 
   //const emailId = (id.id == user.userId) ? user.emailId : null
   let emailId = null
@@ -71,6 +73,7 @@ function HomePage({user, userKey, setUserKey, ...props}) {
         setFriendList(data.data.friends)
         setFriendsKey(data.key)
         setFriendsPublicKeys(data.friendRsaKey)
+        setListLoading(false)
       }
       message.success('Friend list generated')
     }).catch(err=>{
@@ -84,25 +87,31 @@ function HomePage({user, userKey, setUserKey, ...props}) {
   },[emailID])
 
   useEffect(()=>{
-    const loginData = JSON.parse(localStorage.getItem('loginData'))
-    const hoursDiff = Math.abs(new Date() - new Date(loginData.time))/3600000
-    console.log('Hours', hoursDiff)
-    if(hoursDiff > 1){
-      localStorage.removeItem('loginData')
-      loginData=null
-      setEmailID('NA')
-    }
+    let loginData = JSON.parse(localStorage.getItem('loginData'))
+    
     if(!_.isEmpty(loginData)){
-      console.log('LoginData :',loginData)
-      setEmailID(loginData.emailId)
-      performReadTransaction(loginData.userId).then(res=>{
-        console.log('userData:', res)
-        setUserKey(res.privateKey)
-      })
-      emailId = loginData.emailId
-      makeAPIRequest()
+      const hoursDiff = Math.abs(new Date() - new Date(loginData.time))/3600000
+      console.log('Hours', hoursDiff)
+      if(hoursDiff > 1){
+        localStorage.removeItem('loginData')
+        loginData=null
+        setEmailID('NA')
+        message.error("You do not have permission to access this page!!. Please login again")
+        navigate('/login')
+      }
+      else{
+        console.log('LoginData :',loginData)
+        setEmailID(loginData.emailId)
+        performReadTransaction(loginData.userId).then(res=>{
+          console.log('userData:', res)
+          setUserKey(res.privateKey)
+        })
+        emailId = loginData.emailId
+        makeAPIRequest()
+      }
     }else{
-      message.error("You do not have permission to access this page!!. Please login")
+      message.error("You do not have permission to access this page!!. Please login again")
+      navigate('/login')
     }
     //makeAPIRequest()
   },[])
@@ -158,7 +167,7 @@ function HomePage({user, userKey, setUserKey, ...props}) {
     <div className='home-page'>
       <Row>
         <Col xs={4} sm={4} md={4} lg={5} xl={6}>
-          {emailID != 'NA' ? <LeftSideBar onSelectFriend={onSelectFriend} friendList={friendList} selectedFriend={selectedFriend} emailId={emailId} updateFriendList={updateFriendList} userKey={userKey} setFriendsKey={setFriendsKey}/> : <>{'Restricted Page!! Go back to Login Page'}</>}
+          {emailID != 'NA' ? <LeftSideBar onSelectFriend={onSelectFriend} friendList={friendList} selectedFriend={selectedFriend} emailId={emailId} updateFriendList={updateFriendList} userKey={userKey} setFriendsKey={setFriendsKey} isListLoading={isListLoading} /> : <>{'Restricted Page!! Go back to Login Page'}</>}
         </Col>
         <Col xs={6} sm={8} md={12} lg={15} xl={18}>
           {emailID != 'NA' ? <ChatWindow selectedFriend={selectedFriend} emailId={emailID} sharedKey={sharedKey} friendData={friendData} /> : <>{'Restricted Page!'}</>}
