@@ -62,7 +62,7 @@ function HomePage({user, userKey, setUserKey, ...props}) {
 
   
 
-  const makeAPIRequest=()=>{
+  const makeAPIRequest=(emailId)=>{
     fetch(server_chat_url +emailId).then((res)=>{
       if(res && res.ok )
           return res.json()
@@ -102,12 +102,13 @@ function HomePage({user, userKey, setUserKey, ...props}) {
       else{
         console.log('LoginData :',loginData)
         setEmailID(loginData.emailId)
+        //emailId=loginData.emailId
         performReadTransaction(loginData.userId).then(res=>{
           console.log('userData:', res)
           setUserKey(res.privateKey)
         })
         emailId = loginData.emailId
-        makeAPIRequest()
+        makeAPIRequest(emailId)
       }
     }else{
       message.error("You do not have permission to access this page!!. Please login again")
@@ -159,8 +160,8 @@ function HomePage({user, userKey, setUserKey, ...props}) {
 
   const updateFriendList=(friend)=>{
     const newFriendList=[...friendList, friend]
-    makeAPIRequest()
-    setFriendList(newFriendList)
+    makeAPIRequest(emailID)
+    //setFriendList(newFriendList)
   }
 
   return (

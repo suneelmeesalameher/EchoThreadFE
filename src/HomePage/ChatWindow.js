@@ -100,7 +100,8 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
     })
     }
     }
-    fetchData()
+    if(selectedFriend)
+      fetchData()
   },[selectedFriend, sharedKey])
 
   const onEnterKeyPress=(event)=>{
