@@ -167,7 +167,7 @@ function HomePage({user, userKey, setUserKey, ...props}) {
     <div className='home-page'>
       <Row>
         <Col xs={4} sm={4} md={4} lg={5} xl={6}>
-          {emailID != 'NA' ? <LeftSideBar onSelectFriend={onSelectFriend} friendList={friendList} selectedFriend={selectedFriend} emailId={emailId} updateFriendList={updateFriendList} userKey={userKey} setFriendsKey={setFriendsKey} isListLoading={isListLoading} /> : <>{'Restricted Page!! Go back to Login Page'}</>}
+          {emailID != 'NA' ? <LeftSideBar onSelectFriend={onSelectFriend} friendList={friendList} selectedFriend={selectedFriend} emailId={emailID} updateFriendList={updateFriendList} userKey={userKey} setFriendsKey={setFriendsKey} isListLoading={isListLoading} /> : <>{'Restricted Page!! Go back to Login Page'}</>}
         </Col>
         <Col xs={6} sm={8} md={12} lg={15} xl={18}>
           {emailID != 'NA' ? <ChatWindow selectedFriend={selectedFriend} emailId={emailID} sharedKey={sharedKey} friendData={friendData} /> : <>{'Restricted Page!'}</>}
