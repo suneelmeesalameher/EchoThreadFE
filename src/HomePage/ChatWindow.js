@@ -44,11 +44,15 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
   const [messageList, setMessageList] = useState([])
   const [isLoadingMessages, setLoadingMessages] = useState(false)
   const [isSendingMessage, setSendingMessage] = useState(false)
+
+  useEffect(()=>{
+    console.log("isLoadingMessages :",isLoadingMessages)
+  },[isLoadingMessages])
   
   useEffect(()=>{
     const fetchData=async()=>{
       if(selectedFriend)
-      setLoadingMessages(true)
+        setLoadingMessages(true)
     if(selectedFriend && emailId){
       fetch(server_chat_url+emailId+'/'+selectedFriend).then((res)=>{
         if(res && res.ok )
@@ -69,6 +73,7 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
               const iv = str2ab(friendData.iv)
               const dec = new TextDecoder()
               const newChatMsg=base64ToArrayBuffer(msg.chat)
+              console.log('sharedKey :',sharedKey)
               const plainText =await aesDecrypt(iv, sharedKey, newChatMsg)
               const plainTextString = dec.decode(plainText)
               newMsg.chat=plainTextString
@@ -83,17 +88,20 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
         }))
         //tempfunction()
         setMessageList(finalMessageListDecrypted)
-        setLoadingMessages(false)
+        setTimeout(()=>{
+          setLoadingMessages(false)
+        }, 800)
+        
+        console.log('isLoading Messages :', isLoadingMessages)
     }).catch(err=>{
         console.log(err)
        // message.error(err.message)
+       //setLoadingMessages(false)
     })
     }
     }
     fetchData()
-    
-    
-  },[selectedFriend, emailId, sharedKey])
+  },[selectedFriend, sharedKey])
 
   const onEnterKeyPress=(event)=>{
     if(event.keyCode == '13'){
@@ -146,7 +154,7 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
       setSendingMessage(false)
   })
   }
-  const loadedData = <MessageList messageList={messageList} emailId={emailId}/>
+  const loadedData = <MessageList messageList={messageList || []} emailId={emailId}/>
   const emptyData = <Empty description="No Messages"/>
   return (
     <div className='chat-window'>
