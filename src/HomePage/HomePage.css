@@ -13,15 +13,35 @@
             .section1{
                 height: 50%;
                 font-family: 'Dosis', sans-serif;
-                /* display: flex;
-                justify-content: space-between; */
-                align-self: center;
+                display: flex;
+                justify-content: space-between;
+                /* align-self: center; */
                 padding: 20px;
+                >h3{
+                    font-size: 1.30em;
+                    background: -webkit-linear-gradient(#eee, #0cad26);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
                 >h3:hover{
-                    fill: #779191;
-                    /*transform: scale(1.2);*/
+                    /* fill: #779191; */
+                    /* background: rgb(2,0,36); */
+                    /* background: -webkit-linear-gradient(#eee, #333);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent; */
+                    /* transform: scale(1.2); */
                 }
                 .anticon-user-add{
+                    >svg{
+                        width: 25px;
+                        height: 25px;
+                    }
+                    >svg:hover{
+                        fill: #6AA602;
+                        transform: scale(1.2);
+                    }
+                }
+                .anticon-logout{
                     >svg{
                         width: 25px;
                         height: 25px;

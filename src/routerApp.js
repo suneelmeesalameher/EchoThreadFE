@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Route,BrowserRouter as Router, Routes, } from 'react-router-dom'
+import { Route,BrowserRouter as Router, Routes } from 'react-router-dom'
+import _ from 'lodash'
 
 import Registration from './RegistrationPage/Registration'
 import Login from './LoginPage/Login'
@@ -12,8 +13,19 @@ function RouterApp({...props}) {
   const [user, setUser] = useState(null)
   const [userKey, setUserKey] = useState(null)
 
+
   const changeUserStatus=(value)=>{
     setUserLoggedIn(value)
+  }
+
+  const logOutUser=(emailId)=>{
+    const foundUser = JSON.parse(localStorage.getItem('loginData'))
+    debugger
+    if(emailId && !_.isEmpty(user) && user.emailId == emailId && !_.isEmpty(foundUser) && foundUser.emailId == emailId){
+      localStorage.removeItem('loginData')
+      setUserLoggedIn(false)
+      window.location.href='/login'
+    }
   }
 
   useEffect(()=>{
@@ -34,7 +46,7 @@ function RouterApp({...props}) {
     {
       name: 'home',
       validationRequired: true,
-      jsx: (<Route path='/home/:id' element={<HomePage user={user} userKey={userKey} setUserKey={setUserKey}/>} key='home'/>)
+      jsx: (<Route path='/home/:id' element={<HomePage user={user} setUser={setUser} userKey={userKey} setUserKey={setUserKey} logOutUser={logOutUser}/>} key='home'/>)
     }
   ]
 
@@ -60,10 +72,6 @@ function RouterApp({...props}) {
   return (
       <Router>
         <Routes>
-            {/* <Route path='/' element={<Login />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/registration' element={<Registration />} />
-            <Route path='/home' element={<HomePage />} /> */}
             <Route path='/' element={<Login changeUserStatus={changeUserStatus} setUser={setUser} setUserKey={setUserKey}/>} />
             {getRoutes()}
         </Routes>

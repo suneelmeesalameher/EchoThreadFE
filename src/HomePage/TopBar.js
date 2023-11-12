@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import {Modal, message} from 'antd'
+import { LogoutOutlined } from '@ant-design/icons'
 import { generateSharedKey, aesEncrypt, aesDecrypt, exportKey, importKey, wrapKey, unwrapKey, ab2str, str2ab, arrayBufferToBase64, base64ToArrayBuffer, importRSAKey, importDiffieKey, deriveSecretKey } from '../CryptoUtility'
 
 import SearchBar from './../Components/SearchBar'
 import { server_chat_url } from '../config'
 
-function TopBar({emailId, updateFriendList, keyPair, setFriendsKey, userKey, ...props}) {
+function TopBar({emailId, updateFriendList, keyPair, setFriendsKey, userKey, logOutUser, ...props}) {
 
   const [selectedFriend, setSelectedFriend] =useState(null)
   const [selectedSharedKey, setSelectedSharedKey] = useState(null)
   const [isModalOpen, setModalOpen] = useState(false)
   const [isLoading, setLoading] = useState(false)
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false)
   
   const onSelectUser=(value)=>{
     if(value){
@@ -139,10 +141,20 @@ function TopBar({emailId, updateFriendList, keyPair, setFriendsKey, userKey, ...
     setSelectedFriend(null)
   }
 
+  const handleLogoutCancel=()=>{
+    setLogoutModalOpen(false)
+  }
+
+  const handleLogoutOk=()=>{
+    //do something
+    logOutUser(emailId)
+  }
+
   return (
     <div className='top-bar'>
       <div className='section1'>
         <h3>Echo Threads</h3>
+        <LogoutOutlined onClick={()=>setLogoutModalOpen(true)}/>
       </div>
       <div className='section2'>
         <div className='search-bar'>
@@ -151,6 +163,9 @@ function TopBar({emailId, updateFriendList, keyPair, setFriendsKey, userKey, ...
       </div>
       <Modal title="Add Friend" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} confirmLoading={isLoading}>
         <p>Are you sure you want to add {selectedFriend ? selectedFriend.label : 'null'} as a friend?</p>
+      </Modal>
+      <Modal title="Logout" open={isLogoutModalOpen} onOk={handleLogoutOk} onCancel={handleLogoutCancel} confirmLoading={false}>
+        <p>Are you sure you want to Logout?</p>
       </Modal>
     </div>
   )
