@@ -7,7 +7,7 @@ import { server_chat_url } from '../config'
 import MessageList from '../Components/MessageList'
 import MessageInput from '../Components/MessageInput'
 import MessageTopBar from './MessageTopBar'
-import { base64ToArrayBuffer, importKey, str2ab, aesEncrypt, arrayBufferToBase64, ab2str, aesDecrypt } from '../CryptoUtility'
+import { base64ToArrayBuffer, importKey, str2ab, aesEncrypt, arrayBufferToBase64, ab2str, aesDecrypt, generateKeyPair, signMessage, verifyMessage } from '../CryptoUtility'
 import SpinLoader from '../Components/SpinLoader'
 //import { generateRSAKey, rsaEncryptMessage, rsaDecryptMessage } from '../CryptoUtility'
 
@@ -38,6 +38,13 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
   //     })
   //   }
   // })
+
+  const getDigitalSignatureKey=async()=>{
+    const dskeyPair = await generateKeyPair({name: 'ECDSA', namedCurve: 'P-384'},['sign','verify'])
+    return dskeyPair
+  }
+
+  
   
   
   const [newMessage, setMessage] = useState('')
@@ -59,8 +66,49 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
             return res.json()
         throw res
     }).then(async (data)=>{
+
+      // //testing digital signatures here
+      // const dskeyPairA =await getDigitalSignatureKey()
+      // console.log('dsKeyPairA :',dskeyPairA)
+      // const dskeyPairB =await getDigitalSignatureKey()
+      // console.log('dsKeyPairB :',dskeyPairB)
+
+      // const messageText = 'Antman and the wasp is releasing dec16th!!!!'
+      // const enc = new TextEncoder()
+      // const encData = enc.encode(messageText)
+      // const ivString = 'abcdefghijk123456789'
+      // const iv1 = str2ab(ivString)
+      // const cipherText1 =await aesEncrypt(iv1, sharedKey, encData)
+      // let cipherTextString = arrayBufferToBase64(cipherText1)
+      // console.log('cipherTextString: ',cipherTextString)
+
+      // const dec = new TextDecoder()
       
-        const dec=new TextDecoder()
+      // const newChatMsg=base64ToArrayBuffer(cipherTextString)
+      // const plainText1 =await aesDecrypt(iv1, sharedKey, newChatMsg)
+      // const plainTextString1 = dec.decode(plainText1)
+      // console.log('plainTextString :',plainTextString1)
+
+      // const newPlainTextString ='Antman and the wasp is releasing dec16th!!!!'
+      // const encNewPlaintextString = enc.encode(newPlainTextString)
+
+      //     //sign message
+      //     const signedMessage = await signMessage(dskeyPairA.privateKey, encData)
+      //     console.log('signedMessage :',signedMessage)
+      //     const signedMessageString = arrayBufferToBase64(signedMessage)
+      //     console.log('signedMessageString',signedMessageString)
+
+      //     //verify sign
+      //     const signedMessageBuffer = base64ToArrayBuffer(signedMessageString)
+      //     console.log('signedMessageBuffer :',signedMessageBuffer)
+      //     const isMessageVerified = await verifyMessage(dskeyPairA.publicKey, signedMessageBuffer, encNewPlaintextString)
+      //     console.log('isMessageVerified :', isMessageVerified)
+
+
+
+
+      //end of digital signature testing
+       // const dec=new TextDecoder()  //uncomment this after testing
         const receivedMessages = ((data && data.recieved) || [])
         const sentMessages = ((data && data.sent) || [])
         const finalMessageList = ([... receivedMessages, ...sentMessages]).sort((a,b) => a.timestamp - b.timestamp)
@@ -151,7 +199,7 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
       
   }).catch(err=>{
       console.log(err)
-      message.error(err)
+      //message.error(err)
       setSendingMessage(false)
   })
   }

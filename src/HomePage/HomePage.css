@@ -1,6 +1,7 @@
 .home-page{
     width: 100vw;
     height: 100vh;
+    font-family: 'Dosis', sans-serif;
     .left-side-bar{
         height: 99.6vh;
         border: 1px solid #4f5454;
@@ -11,6 +12,7 @@
             border-bottom: 1px solid #4f5454;
             .section1{
                 height: 50%;
+                font-family: 'Dosis', sans-serif;
                 /* display: flex;
                 justify-content: space-between; */
                 align-self: center;
@@ -48,6 +50,7 @@
 
         }
         .list-contacts{
+            font-family: 'Dosis', sans-serif;
             .contact-card{
                 border-bottom: 1px solid #4f5454;
                 height: 60px;
@@ -101,6 +104,7 @@
             }
             .chat-top-bar{
                 height: 80px;
+                font-family: 'Dosis', sans-serif;
                 .message-top-bar{
                     height: 100%;
                     border: 1px solid #4f5454;
@@ -119,6 +123,7 @@
                 height: 570px;
                 border: 1px solid #4f5454;
                 overflow: auto;
+                font-family: 'Dosis', sans-serif;
                 .ant-empty{
                     align-self: center;
                     padding: 50px;

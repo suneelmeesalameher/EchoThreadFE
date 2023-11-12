@@ -64,7 +64,7 @@ function RouterApp({...props}) {
             <Route path='/login' element={<Login />} />
             <Route path='/registration' element={<Registration />} />
             <Route path='/home' element={<HomePage />} /> */}
-            <Route path='/' element={<Login changeUserStatus={changeUserStatus} setUser={setUser}/>} />
+            <Route path='/' element={<Login changeUserStatus={changeUserStatus} setUser={setUser} setUserKey={setUserKey}/>} />
             {getRoutes()}
         </Routes>
       </Router>

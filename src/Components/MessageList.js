@@ -7,12 +7,13 @@ import "react-chat-elements/dist/main.css"
 function MessageList({messageList, emailId, ...props}) {
         const messages = (messageList || []).map(message=>{
            return (<MessageBox 
-                position={message.friends == emailId ? 'left' : 'right'}
+                position={message.friends == emailId ? 'right' : 'left'}
                 type={'text'}
                 title={message.friends}
                 text={message.chat}
                 date={new Date(message.timestamp)}
                 key={message.timestamp}
+                retracted={false}
             />)
           })
   return (

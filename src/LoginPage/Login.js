@@ -73,14 +73,14 @@ function Login({changeUserStatus, setUser, setUserKey, ...props}) {
             })
         }).catch(err=>{
             console.log('error:',err)
-            message.error(err)
+            //message.error(err)
             setLoading(false)
         })
     }
 
   return (
     <div className='login'>
-        <label class='page-header'>Login</label>
+        <label className='page-header'>Login</label>
         <div className='create-user'>
             <div className='email'>
                 <label>Email</label>

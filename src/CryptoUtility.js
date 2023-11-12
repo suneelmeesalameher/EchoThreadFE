@@ -61,7 +61,7 @@ const importRSAKey=( format, key, algorithm, usage)=>{
 }
 
 //function to generate RSA keyPair
-const generateRSAKey=()=>{
+const generateRSAKey=(usage)=>{
    const keyPair = crypto.subtle.generateKey({
     name: 'RSA-OAEP',
     modulusLength: 2048, // Key size in bits
@@ -69,9 +69,13 @@ const generateRSAKey=()=>{
     hash: 'SHA-256',
   },
   true, // Can be used for both encryption and decryption
-  ['wrapKey', 'unwrapKey']);
+  usage);
     console.log(keyPair)
     return keyPair
+}
+
+const generateKeyPair=(algorithm, usage)=>{
+    return crypto.subtle.generateKey(algorithm, true, usage)
 }
 
 
@@ -126,6 +130,26 @@ const deriveSecretKey=(privateKey, publicKey)=>{
     ['encrypt','decrypt'])
 }
 
+
+const signMessage=(privateKey, data)=>{
+    return crypto.subtle.sign({
+        name: 'ECDSA',
+        hash: {name: 'SHA-384'},
+    },
+    privateKey,
+    data)
+}
+
+const verifyMessage=(publicKey, signature, data)=>{
+    return crypto.subtle.verify({
+        name: 'ECDSA',
+        hash: {name: 'SHA-384'},
+    },
+    publicKey,
+    signature,
+    data)
+}
+
 function ab2str(buf) {
     return btoa(String.fromCharCode.apply(null, buf))
 }
@@ -166,4 +190,4 @@ function arrayBufferToBase64(arrayBuffer) {
     return true;
   }
 
-export {getHash, generateRSAKey, rsaEncryptMessage, rsaDecryptMessage, generateSharedKey, aesEncrypt, aesDecrypt, exportKey, importKey, wrapKey, unwrapKey, ab2str, str2ab, ab2str2, arrayBufferToBase64, base64ToArrayBuffer, arraysEqual, importRSAKey, generateDiffieKeyPair, deriveSecretKey, importDiffieKey};
+export {getHash, generateRSAKey, rsaEncryptMessage, rsaDecryptMessage, generateSharedKey, aesEncrypt, aesDecrypt, exportKey, importKey, wrapKey, unwrapKey, ab2str, str2ab, ab2str2, arrayBufferToBase64, base64ToArrayBuffer, arraysEqual, importRSAKey, generateDiffieKeyPair, deriveSecretKey, importDiffieKey, generateKeyPair, signMessage, verifyMessage};

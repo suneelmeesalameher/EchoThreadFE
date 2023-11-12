@@ -126,7 +126,7 @@ function TopBar({emailId, updateFriendList, keyPair, setFriendsKey, userKey, ...
         })
     }).catch(err=>{
         console.log(err)
-        message.error(err)
+        //message.error(err)
         setLoading(false)
         setSelectedFriend(null)
 
