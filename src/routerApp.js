@@ -20,7 +20,6 @@ function RouterApp({...props}) {
 
   const logOutUser=(emailId)=>{
     const foundUser = JSON.parse(localStorage.getItem('loginData'))
-    debugger
     if(emailId && !_.isEmpty(user) && user.emailId == emailId && !_.isEmpty(foundUser) && foundUser.emailId == emailId){
       localStorage.removeItem('loginData')
       setUserLoggedIn(false)

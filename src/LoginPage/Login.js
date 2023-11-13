@@ -80,21 +80,35 @@ function Login({changeUserStatus, setUser, setUserKey, ...props}) {
 
   return (
     <div className='login'>
-        <label className='page-header'>Login</label>
-        <div className='create-user'>
-            <div className='email'>
-                <label>Email</label>
-                <Input id='emailid' placeholder='Enter Email-id' onChange={onChangeEmail} value={emailId} />
+        <div className='left-side'>
+            <div className='left-data'>
+            <label className='page-header'>Login</label>
+            <div className='create-user'>
+                <div className='email'>
+                    <label>Email</label>
+                    <Input id='emailid' placeholder='Enter Email-id' onChange={onChangeEmail} value={emailId} />
+                </div>
+                <div className='password'>
+                    <label>Password</label>
+                    <Input.Password id='password' placeholder='Enter Password' onChange={onChangePassword} value={password} iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
+                </div>
+                <div className='login-button'>
+                    <Button onClick={onSubmitLogin} disabled={!emailId || !password} loading={isLoading} >Login</Button>
+                </div>
+                {/* <Link to='/registration'><label className='link'>Register here!!</label></Link> */}
             </div>
-            <div className='password'>
-                <label>Password</label>
-                <Input.Password id='password' placeholder='Enter Password' onChange={onChangePassword} value={password} iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
             </div>
-            <div className='login-button'>
-                <Button onClick={onSubmitLogin} disabled={!emailId || !password} loading={isLoading} >Login</Button>
-            </div>
-            <Link to='/registration'><label className='link'>Register here!!</label></Link>
         </div>
+        <div className='right-side'>
+                <div className='right-text'>
+                    <span className='right-image'></span>
+                    <span className='right-data'>
+                        <p>Join The Echo Thread Community!</p>
+                        <p>Sign up here</p>
+                    </span>
+                    <Link to='/registration'><Button className='link-button'>Register</Button></Link>
+                </div>
+            </div>
     </div>
   )
 }

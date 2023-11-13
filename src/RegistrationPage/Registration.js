@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom'
 function Registration(props) {
     const [emailId, setEmailId] =useState('')
     const [password, setPassword] =useState('')
+    const [confirmPassword, setConfirmPassword] =useState('')
     const [isLoading, setLoading] = useState(false)
 
     let navigate = useNavigate()
@@ -69,6 +70,10 @@ function Registration(props) {
         setPassword(event.target.value)
     }
 
+    const onChangeConfirmPassword=(event)=>{
+        setConfirmPassword(event.target.value)
+    }
+
     const clearState=()=>{
         setEmailId('')
         setPassword('')
@@ -78,6 +83,10 @@ function Registration(props) {
     const onSubmitRegistration=async()=>{
         if(!validateEmail(emailId)){
             message.warning('Enter a valid Email')
+            return
+        }
+        if(password && confirmPassword && password != confirmPassword){
+            message.warning('The password does not match the confirmed password!')
             return
         }
         const hashedPassword = getHash(password)
@@ -160,7 +169,7 @@ function Registration(props) {
 
   return (
     <div className='registration'>
-        <label class='page-header'>Registration</label>
+        <label className='page-header'>Sign Up</label>
         <div className='create-user'>
             <div className='email'>
                 <label>Email</label>
@@ -169,6 +178,10 @@ function Registration(props) {
             <div className='password'>
                 <label>Password</label>
                 <Input.Password id='password' placeholder='Enter Password' onChange={onChangePassword} value={password} iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
+            </div>
+            <div className='password'>
+                <label>Confirm Password</label>
+                <Input.Password id='confirm-password' placeholder='Enter Password' onChange={onChangeConfirmPassword} value={confirmPassword} iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
             </div>
             <div className='register-button'>
                 <Button onClick={onSubmitRegistration} disabled={!emailId || !password} loading={isLoading} >Register</Button>

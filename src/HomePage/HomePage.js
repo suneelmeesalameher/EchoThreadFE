@@ -107,6 +107,9 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
         performReadTransaction(loginData.userId).then(res=>{
           console.log('userData:', res)
           setUserKey(res.privateKey)
+        }).catch(error=>{
+          console.log(error)
+          message.info("Detected Login on new device with this account. Unfortunately we dont have a private key on this device",5)
         })
         emailId = loginData.emailId
         makeAPIRequest(emailId)
