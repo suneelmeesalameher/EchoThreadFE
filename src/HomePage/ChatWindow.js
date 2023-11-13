@@ -52,104 +52,110 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
   const [isLoadingMessages, setLoadingMessages] = useState(false)
   const [isSendingMessage, setSendingMessage] = useState(false)
 
+  const fetchData=async(isPolling)=>{
+    if(selectedFriend && !isPolling)
+      setLoadingMessages(true)
+  if(selectedFriend && emailId){
+    fetch(server_chat_url+emailId+'/'+selectedFriend).then((res)=>{
+      if(res && res.ok )
+          return res.json()
+      throw res
+  }).then(async (data)=>{
+
+    // //testing digital signatures here
+    // const dskeyPairA =await getDigitalSignatureKey()
+    // console.log('dsKeyPairA :',dskeyPairA)
+    // const dskeyPairB =await getDigitalSignatureKey()
+    // console.log('dsKeyPairB :',dskeyPairB)
+
+    // const messageText = 'Antman and the wasp is releasing dec16th!!!!'
+    // const enc = new TextEncoder()
+    // const encData = enc.encode(messageText)
+    // const ivString = 'abcdefghijk123456789'
+    // const iv1 = str2ab(ivString)
+    // const cipherText1 =await aesEncrypt(iv1, sharedKey, encData)
+    // let cipherTextString = arrayBufferToBase64(cipherText1)
+    // console.log('cipherTextString: ',cipherTextString)
+
+    // const dec = new TextDecoder()
+    
+    // const newChatMsg=base64ToArrayBuffer(cipherTextString)
+    // const plainText1 =await aesDecrypt(iv1, sharedKey, newChatMsg)
+    // const plainTextString1 = dec.decode(plainText1)
+    // console.log('plainTextString :',plainTextString1)
+
+    // const newPlainTextString ='Antman and the wasp is releasing dec16th!!!!'
+    // const encNewPlaintextString = enc.encode(newPlainTextString)
+
+    //     //sign message
+    //     const signedMessage = await signMessage(dskeyPairA.privateKey, encData)
+    //     console.log('signedMessage :',signedMessage)
+    //     const signedMessageString = arrayBufferToBase64(signedMessage)
+    //     console.log('signedMessageString',signedMessageString)
+
+    //     //verify sign
+    //     const signedMessageBuffer = base64ToArrayBuffer(signedMessageString)
+    //     console.log('signedMessageBuffer :',signedMessageBuffer)
+    //     const isMessageVerified = await verifyMessage(dskeyPairA.publicKey, signedMessageBuffer, encNewPlaintextString)
+    //     console.log('isMessageVerified :', isMessageVerified)
+
+
+
+
+    //end of digital signature testing
+     // const dec=new TextDecoder()  //uncomment this after testing
+      const receivedMessages = ((data && data.recieved) || [])
+      const sentMessages = ((data && data.sent) || [])
+      const finalMessageList = ([... receivedMessages, ...sentMessages]).sort((a,b) => a.timestamp - b.timestamp)
+      const finalMessageListDecrypted =await Promise.all( (finalMessageList || []).map(async (msg)=>{
+        try{
+          if(msg && msg.chat){
+            const newMsg ={
+              ...msg
+            }
+            const iv = str2ab(friendData.iv)
+            const dec = new TextDecoder()
+            const newChatMsg=base64ToArrayBuffer(msg.chat)
+            console.log('sharedKey :',sharedKey)
+            const plainText =await aesDecrypt(iv, sharedKey, newChatMsg)
+            const plainTextString = dec.decode(plainText)
+            newMsg.chat=plainTextString
+            return newMsg
+          }
+        }
+        catch(error){
+          console.log(error)
+          return Promise.reject(error)
+        }
+      
+      }))
+      //tempfunction()
+      setMessageList(finalMessageListDecrypted)
+      setTimeout(()=>{
+        setLoadingMessages(false)
+      }, 800)
+      
+      console.log('isLoading Messages :', isLoadingMessages)
+  }).catch(err=>{
+      console.log(err)
+     // message.error(err.message)
+     //setLoadingMessages(false)
+  })
+  }
+  }
+
   useEffect(()=>{
     console.log("isLoadingMessages :",isLoadingMessages)
   },[isLoadingMessages])
   
   useEffect(()=>{
-    const fetchData=async()=>{
-      if(selectedFriend)
-        setLoadingMessages(true)
-    if(selectedFriend && emailId){
-      fetch(server_chat_url+emailId+'/'+selectedFriend).then((res)=>{
-        if(res && res.ok )
-            return res.json()
-        throw res
-    }).then(async (data)=>{
-
-      // //testing digital signatures here
-      // const dskeyPairA =await getDigitalSignatureKey()
-      // console.log('dsKeyPairA :',dskeyPairA)
-      // const dskeyPairB =await getDigitalSignatureKey()
-      // console.log('dsKeyPairB :',dskeyPairB)
-
-      // const messageText = 'Antman and the wasp is releasing dec16th!!!!'
-      // const enc = new TextEncoder()
-      // const encData = enc.encode(messageText)
-      // const ivString = 'abcdefghijk123456789'
-      // const iv1 = str2ab(ivString)
-      // const cipherText1 =await aesEncrypt(iv1, sharedKey, encData)
-      // let cipherTextString = arrayBufferToBase64(cipherText1)
-      // console.log('cipherTextString: ',cipherTextString)
-
-      // const dec = new TextDecoder()
-      
-      // const newChatMsg=base64ToArrayBuffer(cipherTextString)
-      // const plainText1 =await aesDecrypt(iv1, sharedKey, newChatMsg)
-      // const plainTextString1 = dec.decode(plainText1)
-      // console.log('plainTextString :',plainTextString1)
-
-      // const newPlainTextString ='Antman and the wasp is releasing dec16th!!!!'
-      // const encNewPlaintextString = enc.encode(newPlainTextString)
-
-      //     //sign message
-      //     const signedMessage = await signMessage(dskeyPairA.privateKey, encData)
-      //     console.log('signedMessage :',signedMessage)
-      //     const signedMessageString = arrayBufferToBase64(signedMessage)
-      //     console.log('signedMessageString',signedMessageString)
-
-      //     //verify sign
-      //     const signedMessageBuffer = base64ToArrayBuffer(signedMessageString)
-      //     console.log('signedMessageBuffer :',signedMessageBuffer)
-      //     const isMessageVerified = await verifyMessage(dskeyPairA.publicKey, signedMessageBuffer, encNewPlaintextString)
-      //     console.log('isMessageVerified :', isMessageVerified)
-
-
-
-
-      //end of digital signature testing
-       // const dec=new TextDecoder()  //uncomment this after testing
-        const receivedMessages = ((data && data.recieved) || [])
-        const sentMessages = ((data && data.sent) || [])
-        const finalMessageList = ([... receivedMessages, ...sentMessages]).sort((a,b) => a.timestamp - b.timestamp)
-        const finalMessageListDecrypted =await Promise.all( (finalMessageList || []).map(async (msg)=>{
-          try{
-            if(msg && msg.chat){
-              const newMsg ={
-                ...msg
-              }
-              const iv = str2ab(friendData.iv)
-              const dec = new TextDecoder()
-              const newChatMsg=base64ToArrayBuffer(msg.chat)
-              console.log('sharedKey :',sharedKey)
-              const plainText =await aesDecrypt(iv, sharedKey, newChatMsg)
-              const plainTextString = dec.decode(plainText)
-              newMsg.chat=plainTextString
-              return newMsg
-            }
-          }
-          catch(error){
-            console.log(error)
-            return Promise.reject(error)
-          }
-        
-        }))
-        //tempfunction()
-        setMessageList(finalMessageListDecrypted)
-        setTimeout(()=>{
-          setLoadingMessages(false)
-        }, 800)
-        
-        console.log('isLoading Messages :', isLoadingMessages)
-    }).catch(err=>{
-        console.log(err)
-       // message.error(err.message)
-       //setLoadingMessages(false)
-    })
-    }
-    }
     if(selectedFriend)
-      fetchData()
+      fetchData(false)
+    const intervalId = setInterval(() => {
+        // do something else
+        fetchData(true)
+    }, 10000);
+    return ()=> clearInterval(intervalId)
   },[selectedFriend, sharedKey])
 
   const onEnterKeyPress=(event)=>{
@@ -195,6 +201,7 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
       message.success('Message Successfully Sent', 0.8, ()=>{
         setMessage(null)
         setSendingMessage(false)
+        fetchData(true)
       })
       
   }).catch(err=>{
