@@ -1,0 +1,245 @@
+.home-page{
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Dosis', sans-serif;
+    .left-side-bar{
+        height: 99.6vh;
+        border: 1px solid #4f5454;
+        .top-bar{
+            display: flex;
+            flex-direction: column;
+            height: 150px;
+            border-bottom: 1px solid #4f5454;
+            .section1{
+                height: 50%;
+                font-family: 'Dosis', sans-serif;
+                display: flex;
+                justify-content: space-between;
+                /* align-self: center; */
+                padding: 20px;
+                >h3{
+                    font-size: 1.30em;
+                    background: -webkit-linear-gradient(#eee, #0cad26);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+                >h3:hover{
+                    /* fill: #779191; */
+                    /* background: rgb(2,0,36); */
+                    /* background: -webkit-linear-gradient(#eee, #333);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent; */
+                    /* transform: scale(1.2); */
+                }
+                .anticon-user-add{
+                    >svg{
+                        width: 25px;
+                        height: 25px;
+                    }
+                    >svg:hover{
+                        fill: #6AA602;
+                        transform: scale(1.2);
+                    }
+                }
+                .anticon-logout{
+                    >svg{
+                        width: 25px;
+                        height: 25px;
+                    }
+                    >svg:hover{
+                        fill: #6AA602;
+                        transform: scale(1.2);
+                    }
+                }
+            }
+            .section2{
+                height: 50%;
+            }
+
+        .search-bar{
+            .ant-select-selection-item{
+                display: none;
+            }
+        }
+        }
+        .spin-loader{
+            height: calc(100% - 160px);
+            .ant-spin{
+                padding-top: calc(100% - 100px);
+            }
+
+        }
+        .list-contacts{
+            font-family: 'Dosis', sans-serif;
+            .contact-card{
+                border-bottom: 1px solid #4f5454;
+                height: 60px;
+                width: 100%;
+                .profile-container{
+                    display: flex;
+                    flex-direction: row;
+                    height: 100%;
+                    .image-container{
+                        width: 20%;
+                        align-self: center;
+                        background-color: #282c34;
+                        margin-left: 10px;
+                    }
+                    .data-container{
+                        width: 80%;
+                        padding: 5px;
+                        align-self: center;
+                        >span{
+                            display: flex;
+                            flex-direction: column;
+                        }
+                    }
+                }
+                
+                /*-webkit-transition: background-color 1000ms linear;*/
+                -ms-transition: background-color 500ms linear;
+                transition: background-color 500ms linear;
+                &.selected{
+                    background-color: #6AA602;
+                }
+            }
+            .contact-card:hover{
+                background-color: #6AA602;
+                color: black;
+            }
+        }
+    }
+    .ant-row{
+        flex-direction: row;
+        flex-wrap: nowrap;
+        .chat-window{
+            width: 100%;
+            min-height: 700px;
+            .spin-loader{
+                height: 570px;
+                
+                .ant-spin{
+                    padding-top: calc(100% - 650px);
+                }
+            }
+            .chat-top-bar{
+                height: 80px;
+                font-family: 'Dosis', sans-serif;
+                .message-top-bar{
+                    height: 100%;
+                    border: 1px solid #4f5454;
+                    .top-bar-container{
+                        padding: 25px;
+                        display: flex;
+                        justify-content: flex-start;
+                        .user-name{
+                            margin-left: 20px;
+                            align-self: center;
+                        }
+                    }
+                }
+            }
+            .message-window{
+                height: 570px;
+                border: 1px solid #4f5454;
+                overflow: auto;
+                font-family: 'Dosis', sans-serif;
+                .ant-empty{
+                    align-self: center;
+                    padding: 50px;
+                    .ant-empty-description{
+                        color: white;
+                    }
+                }
+                .message-list{
+                    max-height:570px;
+                    .rce-container-mbox{
+                        .rce-mbox{
+                            .rce-mbox-body{
+                                .rce-mbox-title{
+                                    color: #6AA602;
+                                }
+                                .rce-mbox-text{
+                                    color: #282c34;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .message-input-container{
+                width: 80%;
+                padding: 10px;
+                .message-box{
+                    width: 100%;
+                    .ant-input-affix-wrapper{
+                        margin-left: 50px;
+                        .ant-input-suffix{
+                            width: 30px;
+                            .anticon-loading{
+                                width: auto;
+                            }
+                            >span{
+                                width: 25px;
+                                height: 25px;
+                            }
+                            >span:hover{
+                                fill: #6AA602;
+                                transform: scale(1.2);
+                            }
+                        }
+                    }
+                    .ant-input-affix-wrapper-disabled{
+                        background-color: aliceblue;
+                        margin-left: 50px;
+                        color:#282c34;
+                        .ant-input-suffix{
+                            width: 30px;
+                            .anticon-loading{
+                                width: auto;
+                            }
+                            >span{
+                                width: 25px;
+                                height: 25px;
+                            }
+                            >span:hover{
+                                fill: #6AA602;
+                                transform: scale(1.2);
+                            }
+                        }:hover{
+                            cursor: not-allowed;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .ant-skeleton-image{
+        background: linear-gradient(90deg, rgb(78 224 0 / 6%) 25%, rgb(31 255 9 / 15%) 37%, rgb(0 255 6 / 6%) 63%) !important;
+    }
+}
+
+.rc-virtual-list{
+    /* height: 100px; */
+    .rc-virtual-list-holder{
+        .rc-virtual-list-holder-inner{
+            .ant-select-item-option{
+                .ant-select-item-option-content{
+                    .ant-space{
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        .ant-space-item{
+                            .username{
+                                max-width: 80%;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        }
+    }
+}

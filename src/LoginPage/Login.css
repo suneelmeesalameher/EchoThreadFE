@@ -1,58 +1,162 @@
 .login{
     height: 400px;
-    .page-header{
-        height: 200px;
-    }
-    .create-user{
-        height: 400px;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        justify-content: center;
-        /*align-items: center;*/
-        .email{
-            display: flex;
-            >label{
-                width: 50%;
-                justify-content: right;
-            }
-            .ant-input{
-                margin-left: 20px;
-                width: 400px;
-            }
-            padding-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* background-color: #151823; */
+    /* animation: textColor 10s ease infinite; */
+    background: linear-gradient(-45deg, #615c5a, #30584b, #0d0e0e, #23d579);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  height: 100vh;
+  width: 100vw;
+  
+  .left-side{
+    width: 60%;
+    height: 100%;
+    .left-data{
+        margin-top: 150px;
+        .page-header{
+            height: 200px;
+            margin-top: 200px;
         }
-        .password{
+        .create-user{
+            height: 350px;
             display: flex;
-            >label{
-                width: 50%;
-            }
-            >span{
-                width: 360px;
+            flex-direction: column;
+            width: 100%;
+            justify-content: center;
+            /*align-items: center;*/
+            .email{
+                display: flex;
+                >label{
+                    width: 30%;
+                    justify-content: right;
+                }
                 .ant-input{
-                    width: 400px;
+                    /* margin-left: 20px; */
+                    width: 350px;
+                }
+                padding-bottom: 20px;
+            }
+            .password{
+                display: flex;
+                >label{
+                    width: 30%;
+                }
+                .ant-input-affix-wrapper{
+                    width: 350px;
+                    .ant-input{
+                        width: 350px;
+                    }
+                }
+                padding-bottom: 20px;
+            }
+            .login-button{
+                align-self:center;
+                width: 350px;
+                .ant-btn{
+                    align-items: center;
+                    width: 50%;
+                    background-color: #25cc2d;
+                    border-color: #1A1A1A;
+                    color: #0d0e0e;
+                }
+                .ant-btn:disabled{
+                    background-color: #ffff;
+                    color: rgb(0,0,0,0.25);
                 }
             }
-            padding-bottom: 20px;
-        }
-        .login-button{
-            align-self:self-end;
-            width: 200px;
-            margin-right: 50px;
-            .ant-btn{
-                align-items: center;
-                width: 50%;
-                background-color: #9090;
+            .login-button:hover{
+                transform: scale(1.1);
+                border-color: aliceblue;
             }
-            .ant-btn:disabled{
-                background-color: #ffff;
-            }
+            
         }
-        >a{
-            color: #ffff
-        }:hover{
-            cursor: pointer;
-        }
-        
     }
+    
+  }
+  .right-side{
+    width: 40%;
+    height: 100%;
+    background: #1A1A1A;
+    opacity: 0.9;
+    border-radius: 10px;
+    .right-text{
+        margin-right: 20px;
+        margin-top: 40px;
+        opacity: 1;
+        width: 100%;
+        border-radius: 20px;
+        height: 90%;
+        .right-image{
+            margin-left: 150px;
+            display: block;
+            width: 200px;
+            height: 200px !important;
+            color: aliceblue;
+            background-size: cover;
+            background-image: url('https://www.pngmart.com/files/16/Speech-Chat-Icon-Transparent-PNG.png');
+        }
+        .right-data{
+
+        }
+        .link-button{
+            width: 200px;
+            background-color: #1da024;
+            opacity: 0.9;
+            border-color: #1A1A1A;
+            color: #0d0e0e;
+            .ant-btn-default{
+            }
+        }
+        .link-button:hover{
+            transform: scale(1.1);
+            border-color: aliceblue;
+        }
+    }
+  }
+    
+    /* :after {
+        position: absolute;
+        content: "";
+        top: 5vw;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        height: 100%;
+        width: 100%;
+        margin: 0 auto;
+        transform: scale(0.75);
+        -webkit-filter: blur(5vw);
+        -moz-filter: blur(5vw);
+        -ms-filter: blur(5vw);
+        filter: blur(5vw);
+        background: linear-gradient(270deg, #0fffc1, #7e0fff);
+        background-size: 100% 100%;
+        animation: animateGlow 10s ease infinite;
+      } */
 }
+
+@keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  @keyframes textColor {
+    0% {
+      color: #7e0fff;
+    }
+    50% {
+      color: #0fffc1;
+    }
+    100% {
+      color: #7e0fff;
+    }
+  }

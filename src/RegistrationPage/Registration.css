@@ -1,61 +1,110 @@
 .registration{
-    height: 400px;
-    .page-header{
-        height: 200px;
-    }
-    .create-user{
-        height: 400px;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        justify-content: center;
-        /*align-items: center;*/
-        .email{
-            display: flex;
-            >label{
-                width: 50%;
-                justify-content: right;
-            }
-            .ant-input{
-                margin-left: 20px;
-                width: 400px;
-            }
-            padding-bottom: 20px;
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(-45deg, #0f0f0f, #62ac94, #0d0e0e, #393f3c);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    display: flex;
+    flex-direction: row;
+    .registration-left{
+        padding-right: 25px;
+        width: 70%;
+        .page-top{
+            height: 30%;
         }
-        .password{
-            display: flex;
-            >label{
-                width: 50%;
+        .page-bottom{
+            height: 60%;
+            .page-header{
+                height: 200px;
             }
-            >span{
-                width: 360px;
-                .ant-input{
-                    width: 400px;
+            .create-user{
+                height: 300px;
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                justify-content: center;
+                padding-left: 25px;
+                /*align-items: center;*/
+                .email{
+                    display: flex;
+                    >label{
+                        width: 30%;
+                        justify-content: right;
+                    }
+                    .ant-input{
+                        margin-left: 0px;
+                        width: 360px;
+                    }
+                    padding-bottom: 20px;
                 }
-            }
-            
-            padding-bottom: 20px;
-        }
-        .register-button{
-            align-self:self-end;
-            width: 200px;
-            margin-right: 50px;
-            .ant-btn{
-                align-items: center;
-                width: 50%;
-                background-color: #9090;
-            }
-            .ant-btn:disabled{
-                background-color: #ffff;
-            }
-        }
-        .link{
-            >a{
-                color: #ffff
-            }:hover{
-                cursor: pointer;
+                .password{
+                    display: flex;
+                    >label{
+                        width: 30%;
+                    }
+                    >span{
+                        width: 360px;
+                        .ant-input{
+                            width: 350px;
+                        }
+                    }
+                    
+                    padding-bottom: 20px;
+                }
+                .register-button{
+                    align-self:center;
+                    width: 200px;
+                    margin-right: 0px;
+                    .ant-btn{
+                        align-items: center;
+                        width: 100%;
+                        background-color: #25cc2d;
+                        border-color: #1A1A1A;
+                    }
+                    .ant-btn:hover{
+                        transform: scale(1.1);
+                        border-color: aliceblue;
+                        color: #1A1A1A;
+                    }
+                    .ant-btn:disabled{
+                        background-color: gray;
+                        
+                    }
+                    .ant-btn:disabled:hover{
+                        transform: scale(1);
+                    }
+                }
+                
             }
         }
         
     }
+    .registration-right{
+        background-color: aliceblue;
+        width: 40%;
+        height:100%;
+        .registration-pic{
+            background-image: url('https://png.pngtree.com/png-vector/20220425/ourlarge/pngtree-sending-message-concept-png-image_4556462.png');
+            height: 70%;
+            background-size: cover;
+        }
+        .registration-login{
+            opacity: 0.5;
+            >p{
+                color: #1A1A1A;
+                /* filter: blur(0px); */
+            }
+            .link-login{
+                width: 200px;
+
+            }
+            .link-login:hover{
+                transform: scale(1.1);
+            }
+
+            
+        }
+        
+    }
+    
 }
