@@ -169,6 +169,12 @@ function Registration(props) {
 
   return (
     <div className='registration'>
+        <div className='registration-left'>
+        <div className='page-top'>
+            <p>Welcome to Echo Thread Community</p>
+            <p>You are one click away from a secure echoing environment</p>
+        </div>
+        <div className='page-bottom'>
         <label className='page-header'>Sign Up</label>
         <div className='create-user'>
             <div className='email'>
@@ -186,8 +192,19 @@ function Registration(props) {
             <div className='register-button'>
                 <Button onClick={onSubmitRegistration} disabled={!emailId || !password} loading={isLoading} >Register</Button>
             </div>
-            <Link to='/login'><label>Login here!!</label></Link>
         </div>
+        </div>
+        </div>
+        <div className='registration-right'>
+            <div className='registration-pic' />
+            <div className='registration-login'>
+                <p>Already part of the community ?</p>
+                <p>Login Here</p>
+                <Link to='/login'><Button className='link-login'>Login</Button></Link>
+            </div>
+        </div>
+        
+        
     </div>
   )
 }
