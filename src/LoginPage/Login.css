@@ -44,7 +44,7 @@
                 >label{
                     width: 30%;
                 }
-                >span{
+                .ant-input-affix-wrapper{
                     width: 350px;
                     .ant-input{
                         width: 350px;
