@@ -45,9 +45,9 @@
                     width: 30%;
                 }
                 .ant-input-affix-wrapper{
-                    width: 350px;
+                    width: 350px !important;
                     .ant-input{
-                        width: 350px;
+                        width: 350px !important;
                     }
                 }
                 padding-bottom: 20px;
