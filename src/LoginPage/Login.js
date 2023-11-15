@@ -73,6 +73,13 @@ function Login({changeUserStatus, setUser, setUserKey, ...props}) {
             })
         }).catch(err=>{
             console.log('error:',err)
+            if(err && err.status){
+                if(err.status == 404){
+                    message.error('EmailId not found')
+                }else if(err.status == 401){
+                    message.error('Incorrect credentials')
+                }
+            }
             //message.error(err)
             setLoading(false)
         })
