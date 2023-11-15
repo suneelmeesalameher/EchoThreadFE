@@ -114,7 +114,7 @@
         flex-wrap: nowrap;
         .chat-window{
             width: 100%;
-            min-height: 700px;
+            min-height: 100vh;
             .spin-loader{
                 height: 570px;
                 
@@ -140,7 +140,7 @@
                 }
             }
             .message-window{
-                height: 570px;
+                height: calc(100vh - 150px);
                 border: 1px solid #4f5454;
                 overflow: auto;
                 font-family: 'Dosis', sans-serif;
@@ -168,7 +168,7 @@
                 }
             }
             .message-input-container{
-                width: 80%;
+                width: calc(80% - 50px);
                 padding: 10px;
                 .message-box{
                     width: 100%;

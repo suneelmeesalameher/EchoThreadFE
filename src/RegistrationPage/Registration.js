@@ -3,13 +3,13 @@ import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 
 
-import { validateEmail } from '../UtilityFunctions'
+import { validateEmail, validatePassword } from '../UtilityFunctions'
 import { server_url } from '../config'
 import { getHash, generateRSAKey, arrayBufferToBase64, exportKey, base64ToArrayBuffer, importKey, importRSAKey, generateDiffieKeyPair, deriveSecretKey, importDiffieKey } from '../CryptoUtility'
 import { performWriteTransaction } from '../indexDBUtility'
 
-import { Button, Input, message } from 'antd'
-import {EyeTwoTone, EyeInvisibleOutlined} from '@ant-design/icons'
+import { Button, Input, message, Tooltip } from 'antd'
+import {EyeTwoTone, EyeInvisibleOutlined, InfoCircleFilled} from '@ant-design/icons'
 import './Registration.css'
 import { Link } from 'react-router-dom'
 
@@ -85,8 +85,16 @@ function Registration(props) {
             message.warning('Enter a valid Email')
             return
         }
+        if(!password){
+            message.warning('Enter a valid Password')
+            return
+        }
         if(password && confirmPassword && password != confirmPassword){
             message.warning('The password does not match the confirmed password!')
+            return
+        }
+        if(password && !validatePassword(password)){
+            message.warning('The password requirements not met!')
             return
         }
         const hashedPassword = getHash(password)
@@ -114,7 +122,6 @@ function Registration(props) {
 
         //diffi testing
         const keyPair=await generateDiffieKeyPair()
-        console.log('A - Keys',keyPair)
         // const bkeyPair=await generateDiffieKeyPair()
         // console.log('B - Keys',bkeyPair.privateKey)
         // const secreta=await deriveSecretKey(akeyPair.privateKey, bkeyPair.publicKey)
@@ -122,9 +129,7 @@ function Registration(props) {
         // const secretb=await deriveSecretKey(bkeyPair.privateKey, akeyPair.publicKey)
         // console.log('secretb - ',secretb)
         const exportedKey = await exportKey('raw', keyPair.publicKey)
-        console.log('exportedKey :', exportedKey)
         const exportedKeyString = arrayBufferToBase64(exportedKey)
-        console.log('exportedKeyString :',exportedKeyString)
 
         // const importedKeyBuffer = base64ToArrayBuffer(exportedKeyString)
         // console.log('importedKeyBuffer :',importedKeyBuffer)
@@ -152,7 +157,6 @@ function Registration(props) {
                 userId: data.userId,
                 privateKey: keyPair.privateKey
             }
-            console.log('privateKeyData :', privateKeyData)
             performWriteTransaction(privateKeyData)
             console.log('registration data', data)
             message.success('Registration Successfully Completed', 1.5, ()=>{
@@ -182,7 +186,11 @@ function Registration(props) {
                 <Input id='emailid' placeholder='Enter Email-id' onChange={onChangeEmail} value={emailId} />
             </div>
             <div className='password'>
-                <label>Password</label>
+                <label>
+                    Password
+                    <Tooltip placement='top' title={'Password needs to be minimum 8 characters length and must contain Uppercase, lowercase, number and special characters'}><InfoCircleFilled /></Tooltip>
+                </label>
+                
                 <Input.Password id='password' placeholder='Enter Password' onChange={onChangePassword} value={password} iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
             </div>
             <div className='password'>

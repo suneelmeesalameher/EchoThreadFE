@@ -41,6 +41,9 @@
                     display: flex;
                     >label{
                         width: 30%;
+                        .anticon-info-circle{
+                            padding-left: 5px;
+                        }
                     }
                     >span{
                         width: 360px;
