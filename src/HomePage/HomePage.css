@@ -168,7 +168,7 @@
                 }
             }
             .message-input-container{
-                width: 80%;
+                width: calc(80% - 50px);
                 padding: 10px;
                 .message-box{
                     width: 100%;

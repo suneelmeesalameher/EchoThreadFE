@@ -3,4 +3,9 @@ const validateEmail=(email)=>{
     return validator.test(email);
 }
 
-export {validateEmail}
+const validatePassword=(password)=>{
+    var validator = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/;
+    return validator.test(password)
+}
+
+export {validateEmail, validatePassword}

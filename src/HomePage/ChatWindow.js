@@ -223,7 +223,7 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
         {/* </Skeleton> */}
       </div> : <SpinLoader size={70}/>}
       <div className='message-input-container'>
-        <MessageInput onChangeMessage={onChangeMessage} onMessageSend={onMessageSend} newMessage={newMessage} isSendingMessage={isSendingMessage} onEnterKeyPress={onEnterKeyPress} isLoadingMessages={isLoadingMessages}/>
+        <MessageInput onChangeMessage={onChangeMessage} onMessageSend={onMessageSend} newMessage={newMessage} isSendingMessage={isSendingMessage} onEnterKeyPress={onEnterKeyPress} isLoadingMessages={isLoadingMessages} selectedFriend={selectedFriend}/>
       </div>
     </div>
   )
