@@ -121,7 +121,7 @@ function Registration(props) {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ emailId: emailId, password: hashedPassword, rsaKey: exportedKeyString})
+            body: JSON.stringify({ emailId: emailId, password: hashedPassword, rsaKey: exportedKeyString, dsPublicKey: dsKeyString})
         };
         fetch(server_url, requestOptions).then((res)=>{
             if(res && res.ok )

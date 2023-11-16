@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import { server_chat_url } from '../config'
-import { base64ToArrayBuffer, deriveSecretKey, importDiffieKey } from '../CryptoUtility'
+import { base64ToArrayBuffer, deriveSecretKey, importDiffieKey, importKey } from '../CryptoUtility'
 import { performReadTransaction } from '../indexDBUtility'
 import _ from 'lodash' 
 
@@ -12,6 +12,7 @@ import ChatWindow from './ChatWindow'
 import{Row, Col, message} from "antd"
 import "./HomePage.css"
 import { useNavigate, useParams } from 'react-router-dom'
+import { verify } from 'crypto'
 
 function HomePage({user, setUser, userKey, setUserKey, logOutUser, userDsKey, setUserDsKey, ...props}) {
 
@@ -20,6 +21,7 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, userDsKey, se
   const [friendList, setFriendList] = useState([])
   const [friendsKey, setFriendsKey] = useState([])
   const [friendsPublicKeys, setFriendsPublicKeys] = useState([])
+  const [friendsDsPublicKeys, setFriendsDsPublicKeys] = useState([])
   const [selectedPublicKey, setSelectedPublicKey] = useState({})
   const [sharedKey, setSharedKey] = useState({})
   const [selectedDsPublicKey, setSelectedDsPublicKey] = useState({})
@@ -46,6 +48,7 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, userDsKey, se
         setFriendList(data.data.friends)
         setFriendsKey(data.key)
         setFriendsPublicKeys(data.friendRsaKey)
+        setFriendsDsPublicKeys(data.dsPublicKey)
         setListLoading(false)
       }
       message.success('Friend list generated')
@@ -102,16 +105,25 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, userDsKey, se
       if(key.friends == selectedFriend)
         return key
     })
-    if(selectedKey && selectedKey.rsaKey){
-      getOriginalCryptoKey(selectedKey.rsaKey)
+    const selectedDsKey = (friendsDsPublicKeys || []).find(key=>{
+      if(key.friends == selectedFriend)
+        return key
+    })
+    if(selectedKey && selectedKey.rsaKey && selectedDsKey && selectedDsKey.rsaKey){
+      getOriginalCryptoKey(selectedKey.rsaKey, selectedDsKey.rsaKey)
     }
   },[selectedFriend])
 
-  const getOriginalCryptoKey=async(string)=>{
+  const getOriginalCryptoKey=async(string, dsString)=>{
     const keyBuffer = base64ToArrayBuffer(string)
     const keyObj = await importDiffieKey('raw', keyBuffer, {name: 'ECDH', namedCurve: 'P-384'})
     console.log('Loaded new public key!!!!!')
+
+    const dsKeyBuffer = base64ToArrayBuffer(dsString)
+    const dsKey = await importKey('raw', dsKeyBuffer, {name: 'ECDSA', namedCurve: 'P-384'},['verify'])
+    console.log('dsKey :',dsKey)
     setSelectedPublicKey(keyObj)
+    setSelectedDsPublicKey(dsKey)
     if(keyObj){
       const sharedKey = await deriveSecretKey(userKey, keyObj)
       console.log('derived new shared Key!!!!!')
@@ -150,7 +162,7 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, userDsKey, se
           {emailID != 'NA' ? <LeftSideBar onSelectFriend={onSelectFriend} friendList={friendList} selectedFriend={selectedFriend} emailId={emailID} updateFriendList={updateFriendList} userKey={userKey} setFriendsKey={setFriendsKey} isListLoading={isListLoading} logOutUser={logOutUser}/> : <>{'Restricted Page!! Go back to Login Page'}</>}
         </Col>
         <Col xs={6} sm={8} md={12} lg={15} xl={18}>
-          {emailID != 'NA' ? <ChatWindow selectedFriend={selectedFriend} emailId={emailID} sharedKey={sharedKey} friendData={friendData} /> : <>{'Restricted Page!'}</>}
+          {emailID != 'NA' ? <ChatWindow selectedFriend={selectedFriend} emailId={emailID} sharedKey={sharedKey} friendData={friendData} selectedDsPublicKey={selectedDsPublicKey} userDsKey={userDsKey}/> : <>{'Restricted Page!'}</>}
         </Col>
       </Row>
     </div>
