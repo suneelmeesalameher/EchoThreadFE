@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import { server_chat_url } from '../config'
-import { generateRSAKey, wrapKey, unwrapKey, base64ToArrayBuffer, deriveSecretKey, importDiffieKey } from '../CryptoUtility'
+import { base64ToArrayBuffer, deriveSecretKey, importDiffieKey } from '../CryptoUtility'
 import { performReadTransaction } from '../indexDBUtility'
 import _ from 'lodash' 
 
@@ -13,36 +13,7 @@ import{Row, Col, message} from "antd"
 import "./HomePage.css"
 import { useNavigate, useParams } from 'react-router-dom'
 
-function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
-
-
-  // let enc =  new TextEncoder()
-  // let dec= new TextDecoder()
-  // const keyPair = {'privateKey': null, 'publicKey': null}
-  // let encryptedMessage=null
-  // generateRSAKey().then(data=>{
-  //   console.log('keypair:' ,data.publicKey)
-  //   if(data){
-  //     keyPair.privateKey = data.privateKey
-  //     keyPair.publicKey = data.publicKey
-  //     console.log('Private: ', keyPair.privateKey)
-  //     console.log('keypair: ', keyPair)
-  //     encryptedMessage = rsaEncryptMessage(data.publicKey,enc.encode('Hey There!!!')).then(res=>{
-  //       console.log(res, 'encrypted message')
-  //       console.log(dec.decode(res))
-  //       return dec.decode(res)
-  //       rsaDecryptMessage(keyPair.privateKey, res).then(res=>{
-  //         console.log(dec.decode(res),'decrypted message')
-  //         return res
-  //       }).catch(err=>{
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch(err=>{
-  //       console.log(err)
-  //     })
-  //   }
-  // })
+function HomePage({user, setUser, userKey, setUserKey, logOutUser, userDsKey, setUserDsKey, ...props}) {
 
   const [selectedFriend, setSelectedFriend] = useState(null)
   const [friendData, setFriendData] = useState(null)
@@ -51,6 +22,7 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
   const [friendsPublicKeys, setFriendsPublicKeys] = useState([])
   const [selectedPublicKey, setSelectedPublicKey] = useState({})
   const [sharedKey, setSharedKey] = useState({})
+  const [selectedDsPublicKey, setSelectedDsPublicKey] = useState({})
   const [emailID, setEmailID] = useState(null)
   const [isListLoading, setListLoading] = useState(true)
 
@@ -63,6 +35,7 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
   
 
   const makeAPIRequest=(emailId)=>{
+    setListLoading(true)
     fetch(server_chat_url +emailId).then((res)=>{
       if(res && res.ok )
           return res.json()
@@ -78,7 +51,8 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
       message.success('Friend list generated')
     }).catch(err=>{
       console.log(err)
-      message.error(err)
+      //message.error(err)
+      setListLoading(false)
     })
   }
 
@@ -107,6 +81,7 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
         performReadTransaction(loginData.userId).then(res=>{
           console.log('userData:', res)
           setUserKey(res.privateKey)
+          setUserDsKey(res.dsPrivateKey)
         }).catch(error=>{
           console.log(error)
           message.info("Detected Login on new device with this account. Unfortunately we dont have a private key on this device",5)
@@ -163,7 +138,7 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
   }
 
   const updateFriendList=(friend)=>{
-    const newFriendList=[...friendList, friend]
+    //const newFriendList=[...friendList, friend]
     makeAPIRequest(emailID)
     //setFriendList(newFriendList)
   }

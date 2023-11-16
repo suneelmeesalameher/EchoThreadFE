@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { validateEmail, validatePassword } from '../UtilityFunctions'
 import { server_url } from '../config'
-import { getHash, generateRSAKey, arrayBufferToBase64, exportKey, base64ToArrayBuffer, importKey, importRSAKey, generateDiffieKeyPair, deriveSecretKey, importDiffieKey } from '../CryptoUtility'
+import { getHash, generateRSAKey, arrayBufferToBase64, exportKey, base64ToArrayBuffer, importKey, importRSAKey, generateDiffieKeyPair, deriveSecretKey, importDiffieKey, generateKeyPair } from '../CryptoUtility'
 import { performWriteTransaction } from '../indexDBUtility'
 
 import { Button, Input, message, Tooltip } from 'antd'
@@ -100,48 +100,23 @@ function Registration(props) {
         const hashedPassword = getHash(password)
         //process.env.REACT_APP_SERVER_URL
         setLoading(true)
-        // const keyPair=await generateRSAKey()
         
-        // console.log('PublicKey:',keyPair.publicKey)
-        // const exportedKey = await exportKey('spki', keyPair.publicKey)
-        // console.log('exportedKey :', exportedKey)
-        // const exportedKeyString = arrayBufferToBase64(exportedKey)
-        // console.log('exportedKeyString :',exportedKeyString)
-        // console.log('PrivateKey:',keyPair.privateKey)
-        // const exportedPrivateKey = await exportKey('pkcs8', keyPair.privateKey)
-        // console.log('exportedPrivateKey', exportedPrivateKey)
-        // const exportedPrivateKeyString = arrayBufferToBase64(exportedPrivateKey)
-        // console.log('exportedPrivateKeyString :',exportedPrivateKeyString)
-
-
-        // const importedKeyBuf = base64ToArrayBuffer(exportedKeyString)
-        // console.log('importedKeyBuf:', importedKeyBuf)
-        // const importedKey =await importRSAKey('spki', importedKeyBuf, {name:'RSA-OAEP', hash: 'SHA-256'},['wrapKey'])
-        // console.log('importedKey :',importedKey)
-
-
-        //diffi testing
+        //diffi key generation
         const keyPair=await generateDiffieKeyPair()
-        // const bkeyPair=await generateDiffieKeyPair()
-        // console.log('B - Keys',bkeyPair.privateKey)
-        // const secreta=await deriveSecretKey(akeyPair.privateKey, bkeyPair.publicKey)
-        // console.log('secreta - ', secreta)
-        // const secretb=await deriveSecretKey(bkeyPair.privateKey, akeyPair.publicKey)
-        // console.log('secretb - ',secretb)
         const exportedKey = await exportKey('raw', keyPair.publicKey)
         const exportedKeyString = arrayBufferToBase64(exportedKey)
 
-        // const importedKeyBuffer = base64ToArrayBuffer(exportedKeyString)
-        // console.log('importedKeyBuffer :',importedKeyBuffer)
-        // const importedKey = await importDiffieKey('raw', importedKeyBuffer, {name: 'ECDH', namedCurve: 'P-384'})
-        // console.log('importedKey', importedKey)
-        // const exportedKeyB = await exportKey('raw', secretb)
-        // console.log('exportedKey :', exportedKeyB)
-
-        // const exportedKeyStringA = arrayBufferToBase64(exportedKeyA)
-        // console.log('exportedKeyStringA :', exportedKeyStringA)
-        // const exportedKeyStringB = arrayBufferToBase64(exportedKeyB)
-        // console.log('exportedKeyStringB :', exportedKeyStringB)
+        //DS key generation
+        const dskeyPair =await generateKeyPair({name: 'ECDSA', namedCurve: 'P-384'},['sign','verify'])
+        console.log('dsKeyPair :',dskeyPair)
+        const exportedDSKey = await exportKey('raw', dskeyPair.publicKey)
+        console.log('exportedDSKey :', exportedDSKey)
+        const dsKeyString = arrayBufferToBase64(exportedDSKey)
+        console.log('dsKeyString :',dsKeyString)
+        // const importedDSKeyBuffer = base64ToArrayBuffer(dsKeyString)
+        // console.log('importedDSKeyBuffer :', importedDSKeyBuffer)
+        // const importedDSKey = await importKey('raw', exportedDSKey, {name: 'ECDSA', namedCurve:'P-384'},['verify'])
+        // console.log('importedDSKey :',importedDSKey)
             
         const requestOptions = {
             method: 'POST',
@@ -155,7 +130,8 @@ function Registration(props) {
         }).then(async(data)=>{
             const privateKeyData={
                 userId: data.userId,
-                privateKey: keyPair.privateKey
+                privateKey: keyPair.privateKey,
+                dsPrivateKey: dskeyPair.privateKey
             }
             performWriteTransaction(privateKeyData)
             console.log('registration data', data)
