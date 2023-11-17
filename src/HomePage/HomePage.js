@@ -105,12 +105,14 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, userDsKey, se
       if(key.friends == selectedFriend)
         return key
     })
+    console.log('selectedKey:',selectedKey)
     const selectedDsKey = (friendsDsPublicKeys || []).find(key=>{
       if(key.friends == selectedFriend)
         return key
     })
-    if(selectedKey && selectedKey.rsaKey && selectedDsKey && selectedDsKey.rsaKey){
-      getOriginalCryptoKey(selectedKey.rsaKey, selectedDsKey.rsaKey)
+    console.log('selectedDsKey:', selectedDsKey)
+    if(selectedKey && selectedKey.rsaKey && selectedDsKey && selectedDsKey.dsPublicKey){
+      getOriginalCryptoKey(selectedKey.rsaKey, selectedDsKey.dsPublicKey)
     }
   },[selectedFriend])
 
