@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import { server_chat_url } from '../config'
-import { generateRSAKey, wrapKey, unwrapKey, base64ToArrayBuffer, deriveSecretKey, importDiffieKey } from '../CryptoUtility'
+import { base64ToArrayBuffer, deriveSecretKey, importDiffieKey, importKey } from '../CryptoUtility'
 import { performReadTransaction } from '../indexDBUtility'
 import _ from 'lodash' 
 
@@ -12,45 +12,19 @@ import ChatWindow from './ChatWindow'
 import{Row, Col, message} from "antd"
 import "./HomePage.css"
 import { useNavigate, useParams } from 'react-router-dom'
+import { verify } from 'crypto'
 
-function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
-
-
-  // let enc =  new TextEncoder()
-  // let dec= new TextDecoder()
-  // const keyPair = {'privateKey': null, 'publicKey': null}
-  // let encryptedMessage=null
-  // generateRSAKey().then(data=>{
-  //   console.log('keypair:' ,data.publicKey)
-  //   if(data){
-  //     keyPair.privateKey = data.privateKey
-  //     keyPair.publicKey = data.publicKey
-  //     console.log('Private: ', keyPair.privateKey)
-  //     console.log('keypair: ', keyPair)
-  //     encryptedMessage = rsaEncryptMessage(data.publicKey,enc.encode('Hey There!!!')).then(res=>{
-  //       console.log(res, 'encrypted message')
-  //       console.log(dec.decode(res))
-  //       return dec.decode(res)
-  //       rsaDecryptMessage(keyPair.privateKey, res).then(res=>{
-  //         console.log(dec.decode(res),'decrypted message')
-  //         return res
-  //       }).catch(err=>{
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch(err=>{
-  //       console.log(err)
-  //     })
-  //   }
-  // })
+function HomePage({user, setUser, userKey, setUserKey, logOutUser, userDsKey, setUserDsKey, ...props}) {
 
   const [selectedFriend, setSelectedFriend] = useState(null)
   const [friendData, setFriendData] = useState(null)
   const [friendList, setFriendList] = useState([])
   const [friendsKey, setFriendsKey] = useState([])
   const [friendsPublicKeys, setFriendsPublicKeys] = useState([])
+  const [friendsDsPublicKeys, setFriendsDsPublicKeys] = useState([])
   const [selectedPublicKey, setSelectedPublicKey] = useState({})
   const [sharedKey, setSharedKey] = useState({})
+  const [selectedDsPublicKey, setSelectedDsPublicKey] = useState({})
   const [emailID, setEmailID] = useState(null)
   const [isListLoading, setListLoading] = useState(true)
 
@@ -63,6 +37,7 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
   
 
   const makeAPIRequest=(emailId)=>{
+    setListLoading(true)
     fetch(server_chat_url +emailId).then((res)=>{
       if(res && res.ok )
           return res.json()
@@ -73,12 +48,14 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
         setFriendList(data.data.friends)
         setFriendsKey(data.key)
         setFriendsPublicKeys(data.friendRsaKey)
+        setFriendsDsPublicKeys(data.dsPublicKey)
         setListLoading(false)
       }
       message.success('Friend list generated')
     }).catch(err=>{
       console.log(err)
-      message.error(err)
+      //message.error(err)
+      setListLoading(false)
     })
   }
 
@@ -107,6 +84,7 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
         performReadTransaction(loginData.userId).then(res=>{
           console.log('userData:', res)
           setUserKey(res.privateKey)
+          setUserDsKey(res.dsPrivateKey)
         }).catch(error=>{
           console.log(error)
           message.info("Detected Login on new device with this account. Unfortunately we dont have a private key on this device",5)
@@ -127,16 +105,25 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
       if(key.friends == selectedFriend)
         return key
     })
-    if(selectedKey && selectedKey.rsaKey){
-      getOriginalCryptoKey(selectedKey.rsaKey)
+    const selectedDsKey = (friendsDsPublicKeys || []).find(key=>{
+      if(key.friends == selectedFriend)
+        return key
+    })
+    if(selectedKey && selectedKey.rsaKey && selectedDsKey && selectedDsKey.rsaKey){
+      getOriginalCryptoKey(selectedKey.rsaKey, selectedDsKey.rsaKey)
     }
   },[selectedFriend])
 
-  const getOriginalCryptoKey=async(string)=>{
+  const getOriginalCryptoKey=async(string, dsString)=>{
     const keyBuffer = base64ToArrayBuffer(string)
     const keyObj = await importDiffieKey('raw', keyBuffer, {name: 'ECDH', namedCurve: 'P-384'})
     console.log('Loaded new public key!!!!!')
+
+    const dsKeyBuffer = base64ToArrayBuffer(dsString)
+    const dsKey = await importKey('raw', dsKeyBuffer, {name: 'ECDSA', namedCurve: 'P-384'},['verify'])
+    console.log('dsKey :',dsKey)
     setSelectedPublicKey(keyObj)
+    setSelectedDsPublicKey(dsKey)
     if(keyObj){
       const sharedKey = await deriveSecretKey(userKey, keyObj)
       console.log('derived new shared Key!!!!!')
@@ -163,7 +150,7 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
   }
 
   const updateFriendList=(friend)=>{
-    const newFriendList=[...friendList, friend]
+    //const newFriendList=[...friendList, friend]
     makeAPIRequest(emailID)
     //setFriendList(newFriendList)
   }
@@ -175,7 +162,7 @@ function HomePage({user, setUser, userKey, setUserKey, logOutUser, ...props}) {
           {emailID != 'NA' ? <LeftSideBar onSelectFriend={onSelectFriend} friendList={friendList} selectedFriend={selectedFriend} emailId={emailID} updateFriendList={updateFriendList} userKey={userKey} setFriendsKey={setFriendsKey} isListLoading={isListLoading} logOutUser={logOutUser}/> : <>{'Restricted Page!! Go back to Login Page'}</>}
         </Col>
         <Col xs={6} sm={8} md={12} lg={15} xl={18}>
-          {emailID != 'NA' ? <ChatWindow selectedFriend={selectedFriend} emailId={emailID} sharedKey={sharedKey} friendData={friendData} /> : <>{'Restricted Page!'}</>}
+          {emailID != 'NA' ? <ChatWindow selectedFriend={selectedFriend} emailId={emailID} sharedKey={sharedKey} friendData={friendData} selectedDsPublicKey={selectedDsPublicKey} userDsKey={userDsKey}/> : <>{'Restricted Page!'}</>}
         </Col>
       </Row>
     </div>

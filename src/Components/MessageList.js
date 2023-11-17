@@ -12,6 +12,7 @@ function MessageList({messageList, emailId, ...props}) {
                 title={message.friends}
                 text={message.chat}
                 date={new Date(message.timestamp)}
+                status={message && message.isVerified ? 'read' : ''}
                 key={message.timestamp}
                 retracted={false}
             />)

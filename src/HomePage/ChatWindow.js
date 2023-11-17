@@ -11,7 +11,7 @@ import { base64ToArrayBuffer, importKey, str2ab, aesEncrypt, arrayBufferToBase64
 import SpinLoader from '../Components/SpinLoader'
 //import { generateRSAKey, rsaEncryptMessage, rsaDecryptMessage } from '../CryptoUtility'
 
-function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) {
+function ChatWindow({selectedFriend, emailId, sharedKey, friendData, selectedDsPublicKey, userDsKey, ...props}) {
   // let enc =  new TextEncoder()
   // let dec= new TextDecoder()
   // const keyPair = {'privateKey': null, 'publicKey': null}
@@ -39,10 +39,10 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
   //   }
   // })
 
-  const getDigitalSignatureKey=async()=>{
-    const dskeyPair = await generateKeyPair({name: 'ECDSA', namedCurve: 'P-384'},['sign','verify'])
-    return dskeyPair
-  }
+  // const getDigitalSignatureKey=async()=>{
+  //   const dskeyPair = await generateKeyPair({name: 'ECDSA', namedCurve: 'P-384'},['sign','verify'])
+  //   return dskeyPair
+  // }
 
   
   
@@ -61,50 +61,25 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
           return res.json()
       throw res
   }).then(async (data)=>{
-
-    // //testing digital signatures here
-    // const dskeyPairA =await getDigitalSignatureKey()
-    // console.log('dsKeyPairA :',dskeyPairA)
-    // const dskeyPairB =await getDigitalSignatureKey()
-    // console.log('dsKeyPairB :',dskeyPairB)
-
-    // const messageText = 'Antman and the wasp is releasing dec16th!!!!'
-    // const enc = new TextEncoder()
-    // const encData = enc.encode(messageText)
-    // const ivString = 'abcdefghijk123456789'
-    // const iv1 = str2ab(ivString)
-    // const cipherText1 =await aesEncrypt(iv1, sharedKey, encData)
-    // let cipherTextString = arrayBufferToBase64(cipherText1)
-    // console.log('cipherTextString: ',cipherTextString)
-
-    // const dec = new TextDecoder()
-    
-    // const newChatMsg=base64ToArrayBuffer(cipherTextString)
-    // const plainText1 =await aesDecrypt(iv1, sharedKey, newChatMsg)
-    // const plainTextString1 = dec.decode(plainText1)
-    // console.log('plainTextString :',plainTextString1)
-
-    // const newPlainTextString ='Antman and the wasp is releasing dec16th!!!!'
-    // const encNewPlaintextString = enc.encode(newPlainTextString)
-
-    //     //sign message
-    //     const signedMessage = await signMessage(dskeyPairA.privateKey, encData)
-    //     console.log('signedMessage :',signedMessage)
-    //     const signedMessageString = arrayBufferToBase64(signedMessage)
-    //     console.log('signedMessageString',signedMessageString)
-
-    //     //verify sign
-    //     const signedMessageBuffer = base64ToArrayBuffer(signedMessageString)
-    //     console.log('signedMessageBuffer :',signedMessageBuffer)
-    //     const isMessageVerified = await verifyMessage(dskeyPairA.publicKey, signedMessageBuffer, encNewPlaintextString)
-    //     console.log('isMessageVerified :', isMessageVerified)
-
-
-
-
-    //end of digital signature testing
-     // const dec=new TextDecoder()  //uncomment this after testing
-      const receivedMessages = ((data && data.recieved) || [])
+      const receivedMessages = await Promise.all(((data && data.recieved) || []).map(async item=>{
+        //verify digital signature of encrypted message
+        try{
+        const obj={...item}
+        const cipherTextBuffer = base64ToArrayBuffer(item.chat)
+        console.log('cipherTextbuffer:', cipherTextBuffer)
+        // const typedArray = new Uint8Array(cipherTextBuffer)
+        // typedArray[0]=1
+        const signedMessageBuffer = base64ToArrayBuffer(item.dsValue)
+        console.log('signedMessageBuffer :',signedMessageBuffer)
+        const isMessageVerified = await verifyMessage(selectedDsPublicKey, signedMessageBuffer, cipherTextBuffer)
+        console.log('isMessageVerified :', isMessageVerified)
+        obj.isVerified = isMessageVerified
+        return obj
+        }catch(error){
+          console.log(error)
+          return Promise.reject(error)
+        }
+      }));
       const sentMessages = ((data && data.sent) || [])
       const finalMessageList = ([... receivedMessages, ...sentMessages]).sort((a,b) => a.timestamp - b.timestamp)
       const finalMessageListDecrypted =await Promise.all( (finalMessageList || []).map(async (msg)=>{
@@ -113,10 +88,11 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
             const newMsg ={
               ...msg
             }
+
+            //decrypt message
             const iv = str2ab(friendData.iv)
             const dec = new TextDecoder()
             const newChatMsg=base64ToArrayBuffer(msg.chat)
-            console.log('sharedKey :',sharedKey)
             const plainText =await aesDecrypt(iv, sharedKey, newChatMsg)
             const plainTextString = dec.decode(plainText)
             newMsg.chat=plainTextString
@@ -133,7 +109,7 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
       setMessageList(finalMessageListDecrypted)
       setTimeout(()=>{
         setLoadingMessages(false)
-      }, 800)
+      }, 500)
       
       console.log('isLoading Messages :', isLoadingMessages)
   }).catch(err=>{
@@ -177,7 +153,8 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
     setSendingMessage(true)
     // const importedKeyBuffer = base64ToArrayBuffer(friendData.key)
     // const importedKey =await importKey("raw", importedKeyBuffer, "AES-GCM")
-
+    
+    //encrypt message
     const iv = str2ab(friendData.iv)
     console.log('iv :', iv)
     const enc = new TextEncoder()
@@ -187,10 +164,17 @@ function ChatWindow({selectedFriend, emailId, sharedKey, friendData, ...props}) 
     console.log('cipherText: ',cipherText)
     const cipherTextString = arrayBufferToBase64(cipherText)
     console.log('cipherTextString: ',cipherTextString)
+
+    //sign encrypted message
+    const signedMessage = await signMessage(userDsKey, cipherText)
+    console.log('signedMessage :',signedMessage)
+    const signedMessageString = arrayBufferToBase64(signedMessage)
+    console.log('signedMessageString',signedMessageString)
+
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ emailId: emailId, friends: selectedFriend, message: cipherTextString})
+      body: JSON.stringify({ emailId: emailId, friends: selectedFriend, message: cipherTextString, dsValue: signedMessageString})
     };
     fetch(server_chat_url+'/friend', requestOptions).then((res)=>{
       if(res && res.ok )

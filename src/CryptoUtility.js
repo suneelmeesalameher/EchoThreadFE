@@ -48,8 +48,8 @@ const exportKey=(format, key)=>{
 }
 
 //fn to import key from external format to cryptoKey obj
-const importKey=( format, key, algorithm)=>{
-    return crypto.subtle.importKey(format, key, algorithm, true, ['encrypt','decrypt'])
+const importKey=( format, key, algorithm, usage)=>{
+    return crypto.subtle.importKey(format, key, algorithm, true, usage ? usage : ['encrypt','decrypt'])
 }
 
 const importDiffieKey=( format, key, algorithm)=>{

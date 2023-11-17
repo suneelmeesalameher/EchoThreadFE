@@ -12,6 +12,7 @@ function RouterApp({...props}) {
   const [userLoggedIn, setUserLoggedIn] = useState(true)
   const [user, setUser] = useState(null)
   const [userKey, setUserKey] = useState(null)
+  const [userDsKey, setUserDsKey] = useState(null)
 
 
   const changeUserStatus=(value)=>{
@@ -45,7 +46,7 @@ function RouterApp({...props}) {
     {
       name: 'home',
       validationRequired: true,
-      jsx: (<Route path='/home/:id' element={<HomePage user={user} setUser={setUser} userKey={userKey} setUserKey={setUserKey} logOutUser={logOutUser}/>} key='home'/>)
+      jsx: (<Route path='/home/:id' element={<HomePage user={user} setUser={setUser} userKey={userKey} setUserKey={setUserKey} logOutUser={logOutUser} userDsKey={userDsKey} setUserDsKey={setUserDsKey} />} key='home'/>)
     }
   ]
 
